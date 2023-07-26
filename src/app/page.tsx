@@ -1,22 +1,13 @@
 'use client'
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-const ENV = encodeURI("http://localhost:8000/");
-
 export default function Home() {
-  const router = useRouter()
 
   function login() {
-    const client_id = "d814e2c0db1c41ec848479f3876900c4";
-    const redirect_uri = encodeURI("http://localhost:8000/home");
-    
     const url = 'https://accounts.spotify.com/authorize' 
                   + '?response_type=token'
-                  + '&client_id=' + client_id
+                  + '&client_id=' + process.env.NEXT_PUBLIC_CLIENT_ID
                   + '&scope=playlist-modify-public'
-                  + '&redirect_uri=' + redirect_uri
+                  + '&redirect_uri=' + process.env.NEXT_PUBLIC_BASE_URL + '/home'
                   + '&show_dialog=true'
 
     window.location.assign(url)
