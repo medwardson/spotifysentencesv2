@@ -74,7 +74,7 @@ export default function Main() {
           SpotifySentences
         </div>
         <div>
-          {id === undefined ? "" : `Logged in: ${id}`}
+          {id === undefined ? "" : `Logged in: ${display_name}`}
         </div>
       </div>
       {id === undefined ? 
@@ -83,12 +83,11 @@ export default function Main() {
           e.preventDefault()
           startCreationAttempt(accessToken, sentence, title, id).then((res) => {
             setResults([...results, {url: res, title}])
-            setTitle("");
-            setSentence("");
           }).catch((err) => {
             console.error(err)
-          }) 
-          
+          })
+          setTitle("")
+          setSentence("")
         }}>
           <TextareaAutosize
             className="mb-4 w-full text-sm font-normal font-sans leading-5 p-3 rounded-xl rounded-br-none focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 text-slate-900 focus-visible:outline-0"

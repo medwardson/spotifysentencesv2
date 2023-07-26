@@ -14,7 +14,7 @@ export const startCreationAttempt = async (accessToken: string, sentence: string
 const splitSentence = (sentence: string) => {
   return sentence
     .split(" ")
-    .map((word) => word.replace(/[^A-Za-z]/g, ''))
+    .map((word) => word.replace(/[^A-Za-z0-9]/g, ''))
     .filter((word) => word.length > 0);
 }
 
