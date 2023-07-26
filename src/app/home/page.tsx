@@ -1,10 +1,12 @@
 'use client'
 
-import { Button, CircularProgress, Input, TextareaAutosize } from "@mui/material";
+import Button from "@mui/material/Button/Button"
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress"
+import Input from "@mui/material/Input/Input";
+import  TextareaAutosize from "@mui/base/TextareaAutosize/TextareaAutosize";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { startCreationAttempt } from "@/utils/spotify";
-import { red } from "@mui/material/colors";
 
 interface UserInfo {
   id: string;
@@ -72,10 +74,10 @@ export default function Main() {
           SpotifySentences
         </div>
         <div>
-          {accessToken === "" ? "" : `Logged in: ${id}`}
+          {id === undefined ? "" : `Logged in: ${id}`}
         </div>
       </div>
-      {accessToken === "" ? 
+      {id === undefined ? 
         <CircularProgress color="inherit" /> :
         <form id="song-form" className="flex flex-col items-center w-6/12 mb-12" onSubmit={(e) => {
           e.preventDefault()
