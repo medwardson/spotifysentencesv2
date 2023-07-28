@@ -1,3 +1,5 @@
+import { TrackObject } from "@/types/spotify";
+
 export const startCreationAttempt = async (
   accessToken: string,
   sentence: string,
@@ -34,7 +36,11 @@ const getSongsV2 = async (
 
   for (let i = 0; i < words.length; i++) {
     const curName = words.slice(0, i + 1).join(" ");
-    const songData = await searchSong(accessToken, curName);
+    const url =
+      "https://api.spotify.com/v1/search" +
+      `?q=${curName}` +
+      "&type=track&limit=50";
+    const songData = await searchSong(url, accessToken, curName);
 
     if (songData === false) {
       continue;
@@ -53,53 +59,37 @@ const getSongsV2 = async (
   return [];
 };
 
-const searchSong = async (accessToken: string, songname: string) => {
-  const songIndex = await getSongIndex(songname, accessToken);
-  if (songIndex === false) {
-    return false;
-  }
-  return fetch(
-    "https://api.spotify.com/v1/search" +
-      `?q=${songname}` +
-      "&type=track&limit=50",
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  )
+const searchSong = async (
+  url: string,
+  accessToken: string,
+  songName: string
+): Promise<false | [string, string]> => {
+  return fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
     .then((res) => res.json())
     .then((data) => {
-      return [
-        data.tracks.items[songIndex].name,
-        data.tracks.items[songIndex].uri,
-      ];
-    });
-};
+      const results = data.tracks;
+      const lowerName = songName.toLowerCase();
 
-const getSongIndex = async (songname: string, token: string) => {
-  let count = 0;
-  return fetch(
-    "https://api.spotify.com/v1/search" +
-      `?q=${songname}` +
-      "&type=track&limit=50",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.tracks.items.length == 0) {
+      if (results.total === 0) {
         return false;
       }
-      for (let i = 0; i < data.tracks.items.length; i++) {
-        if (songname.toLowerCase() == data.tracks.items[i].name.toLowerCase()) {
-          return count;
-        }
-        count++;
+
+      const items: TrackObject[] = results.items;
+
+      const match = items.find((item) => item.name.toLowerCase() === lowerName);
+
+      if (match) {
+        return [match.name, match.uri];
       }
+
+      if (results.next) {
+        return searchSong(results.next, accessToken, songName);
+      }
+
       return false;
     });
 };

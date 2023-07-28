@@ -4,6 +4,7 @@ import Button from "@mui/material/Button/Button";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Input from "@mui/material/Input/Input";
 import TextareaAutosize from "@mui/base/TextareaAutosize/TextareaAutosize";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { startCreationAttempt } from "@/utils/spotify";
@@ -26,7 +27,7 @@ export default function Main() {
   const [url, setUrl] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string>("");
   const [results, setResults] = useState<Array<Result>>([]);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const { id, display_name, images } = userInfo;
 
   useEffect(() => {
@@ -69,6 +70,15 @@ export default function Main() {
   return (
     <main className="flex flex-col items-center p-24">
       <div className="mb-8">
+        <div className="w-full flex justify-center">
+          <Image
+            src={images?.[1]?.url}
+            alt="Profile Photo"
+            width={96}
+            height={96}
+            className="rounded-full"
+          />
+        </div>
         <div className="text-center text-2xl mb-2">SpotifySentences</div>
         <div>{id === undefined ? "" : `Logged in: ${display_name}`}</div>
       </div>
@@ -80,12 +90,15 @@ export default function Main() {
           className="flex flex-col items-center w-6/12 mb-12"
           onSubmit={(e) => {
             e.preventDefault();
+            setLoading(true);
             startCreationAttempt(accessToken, sentence, title, id)
               .then((res) => {
                 setResults([...results, { url: res, title }]);
+                setLoading(false);
               })
               .catch((err) => {
                 console.error(err);
+                setLoading(false);
               });
             setTitle("");
             setSentence("");
@@ -115,7 +128,11 @@ export default function Main() {
               size="medium"
               type="submit"
             >
-              Submit
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </div>
         </form>
