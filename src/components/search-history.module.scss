@@ -1,0 +1,11 @@
+.grid {
+  display: grid;
+  gap: 1em;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 768px) {
+  .grid {
+    grid-template-columns: auto 2fr;
+  }
+}
