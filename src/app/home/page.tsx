@@ -1,12 +1,8 @@
 "use client";
 
-import Button from "@mui/material/Button/Button";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
-import Input from "@mui/material/Input/Input";
-import TextareaAutosize from "@mui/base/TextareaAutosize/TextareaAutosize";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { startCreationAttempt } from "@/utils/spotify";
 import { SearchResult, UserInfo } from "@/types/spotify";
 import SearchHistory from "@/components/search-history";
 import SearchForm from "@/components/search-form";

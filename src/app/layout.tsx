@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 
 import { Inter } from "next/font/google";
 
-import logo from "../../public/logo.svg";
-
 import styles from "@/app/layout.module.scss";
 import Header from "@/components/header";
 
@@ -22,9 +20,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href={logo.src} />
-      </head>
       <body
         className={`${inter.className} ${styles.body} flex flex-col items-center`}
       >
