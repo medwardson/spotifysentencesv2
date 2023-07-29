@@ -20,3 +20,13 @@ export interface TrackObject {
   uri: string;
   is_local: boolean;
 }
+export interface SearchResult {
+  url: string;
+  title: string;
+}
+
+export interface UserInfo {
+  id: string;
+  display_name: string;
+  images: Array<{ url: string }>;
+}

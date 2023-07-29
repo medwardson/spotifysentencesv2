@@ -1,5 +1,7 @@
 "use client";
 
+import Header from "@/components/header";
+
 export default function Home() {
   function login() {
     const url =
@@ -17,18 +19,36 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="mb-8">
-        <div className="text-center text-2xl mb-2">SpotifySentences</div>
-        <div>Welcome to SpotifySentences, please login to continue.</div>
-      </div>
+    <main className="flex flex-col items-center text-gray-800 p-4">
       <button
         id="login"
-        className="rounded-full bg-green-400 py-2 px-4"
+        className="rounded-full bg-green-400 py-2 px-4 mb-8"
         onClick={login}
       >
         Login with Spotify
       </button>
+      <div className="">
+        <div className="text-2xl text-white text-center my-4 font-bold">
+          FAQ
+        </div>
+        <ul>
+          {[
+            {
+              q: "What is this?",
+              a: "SpotifySentences is a fun way to create playlists whose songs' titles match the words in your sentence.",
+            },
+            {
+              q: "How does it work?",
+              a: "After logging in with Spotify, you can enter a sentence and a playlist title. Then, SpotifySentences will create a playlist on your account with songs whose titles match the words in your sentence.",
+            },
+          ].map(({ q, a }) => (
+            <li key={q} className="text-white text-left my-4">
+              <div className="font-bold text-xl">{q}</div>
+              <div className="text-sm">{a}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </main>
   );
 }
