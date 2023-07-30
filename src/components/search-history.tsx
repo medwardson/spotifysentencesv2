@@ -20,17 +20,19 @@ export default function SearchHistory({ results }: SearchHistoryProps) {
             <React.Fragment key={i}>
               <div className="text-left font-bold">{result.title}:</div>
               <div className={styles.playlistLink}>
-                <a
-                  href={result.url}
-                  target="_blank"
-                  className={`text-left ${
-                    result.url === "No songs found"
-                      ? "text-red-400"
-                      : "text-green-400"
-                  } mb-2`}
-                >
-                  {result.url}
-                </a>
+                {result.status === "success" ? (
+                  <a
+                    href={result.url}
+                    target="_blank"
+                    className="text-left text-green-400 mb-2"
+                  >
+                    {result.url}
+                  </a>
+                ) : (
+                  <p className="text-left text-red-400 mb-2">
+                    No song combination found
+                  </p>
+                )}
               </div>
             </React.Fragment>
           ))}

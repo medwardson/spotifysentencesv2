@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 
 import styles from "@/app/layout.module.scss";
 import Header from "@/components/header";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         <Header />
         <div className="h-full w-full">{children}</div>
+        <Analytics />
       </body>
     </html>
   );

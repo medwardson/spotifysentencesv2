@@ -1,20 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SearchResult, UserInfo } from "@/types/spotify";
 import SearchHistory from "@/components/search-history";
 import SearchForm from "@/components/search-form";
 
 export default function Main() {
+  const router = useRouter();
+
   const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
   const [sentence, setSentence] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string>("");
   const [results, setResults] = useState<Array<SearchResult>>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { id, display_name, images } = userInfo;
+  const { id, display_name, images } = userInfo || {};
 
   useEffect(() => {
     const hash = new URLSearchParams(window.location.hash);
@@ -22,7 +25,7 @@ export default function Main() {
     if (token !== null) {
       setAccessToken(token);
     } else {
-      redirect("/");
+      router.push("/");
     }
   }, []);
 
@@ -36,14 +39,14 @@ export default function Main() {
       })
         .then((res) => {
           if (res.ok) return res.json();
-          else redirect("/");
+          else router.push("/");
         })
         .then((data) => {
           setUserInfo(data);
         });
     } catch (err) {
       console.error(err);
-      redirect("/");
+      router.push("/");
     }
   }, [accessToken]);
 

@@ -21,8 +21,9 @@ export interface TrackObject {
   is_local: boolean;
 }
 export interface SearchResult {
-  url: string;
-  title: string;
+  url?: string;
+  title?: string;
+  status: "success" | "failure";
 }
 
 export interface UserInfo {

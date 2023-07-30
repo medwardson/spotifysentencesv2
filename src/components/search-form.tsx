@@ -41,7 +41,7 @@ export default function SearchForm({
         setLoading(true);
         startCreationAttempt(accessToken, sentence, title, userId)
           .then((res) => {
-            setResults([...results, { url: res, title }]);
+            setResults([...results, res]);
             setLoading(false);
           })
           .catch((err) => {

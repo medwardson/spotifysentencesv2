@@ -1,21 +1,21 @@
-import { TrackObject } from "@/types/spotify";
+import { SearchResult, TrackObject } from "@/types/spotify";
 
 export const startCreationAttempt = async (
   accessToken: string,
   sentence: string,
   title: string,
   userId: string
-) => {
+): Promise<SearchResult> => {
   const words = splitSentence(sentence);
   const songUris = await getSongsV2(accessToken, words, []);
   if (songUris?.length === 0 || !songUris) {
-    return "No songs found";
+    return { status: "failure", title };
   }
 
   const { id, url } = await makePlaylist(accessToken, title, userId);
   await addSongs(id, songUris, accessToken);
 
-  return url;
+  return { status: "success", url, title };
 };
 
 const splitSentence = (sentence: string) => {
