@@ -3,6 +3,7 @@
 import { SearchResult } from "@/types/spotify";
 
 import styles from "./search-history.module.scss";
+import React from "react";
 interface SearchHistoryProps {
   results: Array<SearchResult>;
 }
@@ -16,7 +17,7 @@ export default function SearchHistory({ results }: SearchHistoryProps) {
       {results.length > 0 ? (
         <div className={styles.grid}>
           {results.map((result, i) => (
-            <>
+            <React.Fragment key={i}>
               <div className="text-left font-bold">{result.title}:</div>
               <div className={styles.playlistLink}>
                 <a
@@ -31,7 +32,7 @@ export default function SearchHistory({ results }: SearchHistoryProps) {
                   {result.url}
                 </a>
               </div>
-            </>
+            </React.Fragment>
           ))}
         </div>
       ) : (

@@ -24,7 +24,7 @@ export default function RootLayout({
         className={`${inter.className} ${styles.body} flex flex-col items-center`}
       >
         <Header />
-        {children}
+        <div className="h-full w-full">{children}</div>
       </body>
     </html>
   );

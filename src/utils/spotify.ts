@@ -28,7 +28,8 @@ const splitSentence = (sentence: string) => {
 const getSongsV2 = async (
   accessToken: string,
   words: string[],
-  acc: string[]
+  acc: string[],
+  memo: Map<string, false | [string, string]> = new Map()
 ): Promise<string[]> => {
   if (words.length === 0) {
     return acc;
@@ -40,15 +41,25 @@ const getSongsV2 = async (
       "https://api.spotify.com/v1/search" +
       `?q=${curName}` +
       "&type=track&limit=50";
-    const songData = await searchSong(url, accessToken, curName);
 
-    if (songData === false) {
+    // Memoization to prevent duplicate requests
+    const songData = await (async () => {
+      if (memo.has(curName)) {
+        return memo.get(curName);
+      }
+      const data = await searchSong(url, accessToken, curName);
+      memo.set(curName, data);
+      return data;
+    })();
+
+    if (!songData) {
       continue;
     } else {
       const returned = await getSongsV2(
         accessToken,
         words.slice(i + 1, words.length),
-        [...acc, songData[1]]
+        [...acc, songData[1]],
+        memo
       );
       if (returned.length !== 0) {
         return returned;

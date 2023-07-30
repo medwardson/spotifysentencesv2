@@ -70,8 +70,8 @@ export default function SearchForm({
           onChange={(e) => setTitle(e.target.value)}
         ></Input>
         <Button
-          disabled={!title || !sentence}
-          className="w-6/12 !bg-green-400 hover:bg-green-500 disabled:opacity-50 !disabled:bg-green-400"
+          disabled={!title || !sentence || loading}
+          className="w-6/12 !bg-green-700 hover:bg-green-500 disabled:opacity-50"
           variant="contained"
           size="medium"
           type="submit"
