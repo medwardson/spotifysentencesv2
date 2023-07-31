@@ -97,7 +97,9 @@ const searchSong = async (
         return [match.name, match.uri];
       }
 
-      if (results.next) {
+      // If there are more pages of results, search them, but only if it's
+      // a shorter song title. Longer song title would be unlikely to be hidden
+      if (results.next && songName.split(" ").length <= 2) {
         return searchSong(results.next, accessToken, songName);
       }
 
