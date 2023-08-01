@@ -3,9 +3,15 @@ import { startCreationAttempt } from "@/utils/spotify";
 import {
   Button,
   CircularProgress,
+  ToggleButton,
   Input,
   TextareaAutosize,
+  ToggleButtonGroup,
+  Tooltip,
 } from "@mui/material";
+import { useState } from "react";
+
+import { InfoSharp } from "@mui/icons-material";
 
 interface SearchFormProps {
   accessToken: string;
@@ -32,6 +38,8 @@ export default function SearchForm({
   setResults,
   setLoading,
 }: SearchFormProps) {
+  const [longerTitles, setlongerTitles] = useState(false);
+
   return (
     <form
       id="song-form"
@@ -39,7 +47,7 @@ export default function SearchForm({
       onSubmit={(e) => {
         e.preventDefault();
         setLoading(true);
-        startCreationAttempt(accessToken, sentence, title, userId)
+        startCreationAttempt(accessToken, sentence, title, userId, longerTitles)
           .then((res) => {
             setResults([...results, res]);
             setLoading(false);
@@ -59,19 +67,51 @@ export default function SearchForm({
         name="sentence"
         value={sentence}
         onChange={(e) => setSentence(e.target.value)}
+        maxLength={100}
       />
-      <div className="flex justify-between w-full">
-        <Input
-          value={title}
-          disableUnderline
-          placeholder="Playlist Title"
-          className="w-full bg-white px-3 py-1 rounded-xl mr-2 text-sm"
-          name="title"
-          onChange={(e) => setTitle(e.target.value)}
-        ></Input>
+      <Input
+        value={title}
+        disableUnderline
+        placeholder="Playlist Title"
+        className="w-full bg-white px-3 py-1 rounded-xl mx-1 text-sm"
+        name="title"
+        onChange={(e) => setTitle(e.target.value)}
+      ></Input>
+      <div className="flex w-full justify-between items-center my-1">
+        <div className="w-1/2 flex items-center">
+          <div className="flex items-center">
+            <ToggleButtonGroup
+              className="w-full"
+              exclusive
+              onChange={(_, updated) => setlongerTitles(updated)}
+            >
+              <ToggleButton
+                value={false}
+                selected={longerTitles}
+                className="bg-green-700 hover:bg-green-500 text-white px-2 whitespace-nowrap"
+                size="small"
+                color="success"
+              >
+                Short Titles
+              </ToggleButton>
+              <ToggleButton
+                selected={!longerTitles}
+                value={true}
+                color="success"
+                className="bg-green-700 hover:bg-green-500 text-white px-2 whitespace-nowrap"
+                size="small"
+              >
+                Long Titles
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <Tooltip title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run.">
+              <InfoSharp className="text-gray-100 ml-2 text-md" />
+            </Tooltip>
+          </div>
+        </div>
         <Button
           disabled={!title || !sentence || loading}
-          className="w-6/12 !bg-green-700 hover:bg-green-500 disabled:opacity-50"
+          className="!bg-green-700 hover:bg-green-500 disabled:opacity-50 my-3 py-2 w-1/4"
           variant="contained"
           size="medium"
           type="submit"

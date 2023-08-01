@@ -4,10 +4,17 @@ export const startCreationAttempt = async (
   accessToken: string,
   sentence: string,
   title: string,
-  userId: string
+  userId: string,
+  longerTitles: boolean
 ): Promise<SearchResult> => {
   const words = splitSentence(sentence);
-  const songUris = await getSongsV2(accessToken, words, []);
+  const songUris = await getSongs(
+    accessToken,
+    words,
+    [],
+    new Map(),
+    longerTitles
+  );
   if (songUris?.length === 0 || !songUris) {
     return { status: "failure", title };
   }
@@ -25,18 +32,20 @@ const splitSentence = (sentence: string) => {
     .filter((word) => word.length > 0);
 };
 
-const getSongsV2 = async (
+const getSongs = async (
   accessToken: string,
   words: string[],
   acc: string[],
-  memo: Map<string, false | [string, string]> = new Map()
+  memo: Map<string, false | [string, string]> = new Map(),
+  longerTitles: boolean = false
 ): Promise<string[]> => {
   if (words.length === 0) {
     return acc;
   }
 
   for (let i = 0; i < words.length; i++) {
-    const curName = words.slice(0, i + 1).join(" ");
+    const slice = longerTitles ? words.length - i : i + 1;
+    const curName = words.slice(0, slice).join(" ").toLowerCase();
     const url =
       "https://api.spotify.com/v1/search" +
       `?q=${curName}` +
@@ -55,11 +64,12 @@ const getSongsV2 = async (
     if (!songData) {
       continue;
     } else {
-      const returned = await getSongsV2(
+      const returned = await getSongs(
         accessToken,
-        words.slice(i + 1, words.length),
+        words.slice(slice, words.length),
         [...acc, songData[1]],
-        memo
+        memo,
+        longerTitles
       );
       if (returned.length !== 0) {
         return returned;
@@ -83,7 +93,6 @@ const searchSong = async (
     .then((res) => res.json())
     .then((data) => {
       const results = data.tracks;
-      const lowerName = songName.toLowerCase();
 
       if (results.total === 0) {
         return false;
@@ -91,7 +100,7 @@ const searchSong = async (
 
       const items: TrackObject[] = results.items;
 
-      const match = items.find((item) => item.name.toLowerCase() === lowerName);
+      const match = items.find((item) => item.name.toLowerCase() === songName);
 
       if (match) {
         return [match.name, match.uri];

@@ -45,7 +45,6 @@ export default function Main() {
           setUserInfo(data);
         });
     } catch (err) {
-      console.error(err);
       router.push("/");
     }
   }, [accessToken]);
