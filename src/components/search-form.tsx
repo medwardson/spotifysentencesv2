@@ -82,7 +82,7 @@ export default function SearchForm({
           <div className="flex items-center">
             <Button
               disabled={!longerTitles}
-              className="!bg-green-700 hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 my-3 py-2 whitespace-nowrap mr-2"
+              className="bg-green-700 !hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 !my-3 !py-2 !whitespace-nowrap !mr-2"
               size="medium"
               type="submit"
               onClick={() => setlongerTitles(false)}
@@ -91,7 +91,7 @@ export default function SearchForm({
             </Button>
             <Button
               disabled={longerTitles}
-              className="!bg-green-700 hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 my-3 py-2 whitespace-nowrap"
+              className="bg-green-700 !hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 !my-3 !py-2 !whitespace-nowrap"
               variant="contained"
               size="medium"
               type="submit"
