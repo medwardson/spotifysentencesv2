@@ -75,7 +75,7 @@ export default function SearchForm({
         name="title"
         onChange={(e) => setTitle(e.target.value)}
       ></Input>
-      <div className="flex w-full justify-between items-center my-1 flex-wrap">
+      <div className="flex w-full justify-center items-center my-1 flex-wrap">
         <div className="flex items-center">
           <div className="flex items-center">
             <button
@@ -94,19 +94,22 @@ export default function SearchForm({
             >
               LONG TITLES
             </button>
-            <Tooltip title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run.">
+            <Tooltip
+              enterTouchDelay={0}
+              title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run."
+            >
               <InfoSharp className="text-gray-100 mx-2 text-md" />
             </Tooltip>
           </div>
         </div>
-        <button
-          disabled={!title || !sentence || loading}
-          className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-50 text-white disabled:text-green-900 px-4 py-2.5 whitespace-nowrap text-sm w-4/12"
-          type="submit"
-        >
-          {loading ? <CircularProgress size={20} color="inherit" /> : "SUBMIT"}
-        </button>
       </div>
+      <button
+        disabled={!title || !sentence || loading}
+        className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-50 text-white disabled:text-green-900 px-4 py-2.5 whitespace-nowrap text-sm w-1/2"
+        type="submit"
+      >
+        {loading ? <CircularProgress size={20} color="inherit" /> : "SUBMIT"}
+      </button>
     </form>
   );
 }
