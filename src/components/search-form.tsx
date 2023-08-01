@@ -73,37 +73,32 @@ export default function SearchForm({
         value={title}
         disableUnderline
         placeholder="Playlist Title"
-        className="w-full bg-white px-3 py-1 rounded-xl mx-1 text-sm"
+        className="w-full bg-white px-3 py-1 rounded-xl mx-1 !text-sm"
         name="title"
         onChange={(e) => setTitle(e.target.value)}
       ></Input>
       <div className="flex w-full justify-between items-center my-1">
         <div className="w-1/2 flex items-center">
           <div className="flex items-center">
-            <ToggleButtonGroup
-              className="w-full"
-              exclusive
-              onChange={(_, updated) => setlongerTitles(updated)}
+            <Button
+              disabled={!longerTitles}
+              className="!bg-green-700 hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 my-3 py-2 whitespace-nowrap mr-2"
+              size="medium"
+              type="submit"
+              onClick={() => setlongerTitles(false)}
             >
-              <ToggleButton
-                value={false}
-                selected={longerTitles}
-                className="bg-green-700 hover:bg-green-500 text-white px-2 whitespace-nowrap"
-                size="small"
-                color="success"
-              >
-                Short Titles
-              </ToggleButton>
-              <ToggleButton
-                selected={!longerTitles}
-                value={true}
-                color="success"
-                className="bg-green-700 hover:bg-green-500 text-white px-2 whitespace-nowrap"
-                size="small"
-              >
-                Long Titles
-              </ToggleButton>
-            </ToggleButtonGroup>
+              Short Titles
+            </Button>
+            <Button
+              disabled={longerTitles}
+              className="!bg-green-700 hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 my-3 py-2 whitespace-nowrap"
+              variant="contained"
+              size="medium"
+              type="submit"
+              onClick={() => setlongerTitles(true)}
+            >
+              Long Titles
+            </Button>
             <Tooltip title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run.">
               <InfoSharp className="text-gray-100 ml-2 text-md" />
             </Tooltip>
