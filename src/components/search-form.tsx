@@ -3,10 +3,8 @@ import { startCreationAttempt } from "@/utils/spotify";
 import {
   Button,
   CircularProgress,
-  ToggleButton,
   Input,
   TextareaAutosize,
-  ToggleButtonGroup,
   Tooltip,
 } from "@mui/material";
 import { useState } from "react";
@@ -77,42 +75,37 @@ export default function SearchForm({
         name="title"
         onChange={(e) => setTitle(e.target.value)}
       ></Input>
-      <div className="flex w-full justify-between items-center my-1">
-        <div className="w-1/2 flex items-center">
+      <div className="flex w-full justify-between items-center my-1 flex-wrap">
+        <div className="flex items-center">
           <div className="flex items-center">
-            <Button
+            <button
               disabled={!longerTitles}
-              className="bg-green-700 !hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 !my-3 !py-2 !whitespace-nowrap !mr-2"
-              size="medium"
+              className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap mr-2 text-sm"
               type="submit"
               onClick={() => setlongerTitles(false)}
             >
-              Short Titles
-            </Button>
-            <Button
+              SHORT TITLES
+            </button>
+            <button
               disabled={longerTitles}
-              className="bg-green-700 !hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-400 opacity-50 !my-3 !py-2 !whitespace-nowrap"
-              variant="contained"
-              size="medium"
+              className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap text-sm"
               type="submit"
               onClick={() => setlongerTitles(true)}
             >
-              Long Titles
-            </Button>
+              LONG TITLES
+            </button>
             <Tooltip title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run.">
-              <InfoSharp className="text-gray-100 ml-2 text-md" />
+              <InfoSharp className="text-gray-100 mx-2 text-md" />
             </Tooltip>
           </div>
         </div>
-        <Button
+        <button
           disabled={!title || !sentence || loading}
-          className="!bg-green-700 hover:bg-green-500 disabled:opacity-50 my-3 py-2 w-1/4"
-          variant="contained"
-          size="medium"
+          className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-50 text-white disabled:text-green-900 px-4 py-2.5 whitespace-nowrap text-sm w-4/12"
           type="submit"
         >
-          {loading ? <CircularProgress size={20} color="inherit" /> : "Submit"}
-        </Button>
+          {loading ? <CircularProgress size={20} color="inherit" /> : "SUBMIT"}
+        </button>
       </div>
     </form>
   );
