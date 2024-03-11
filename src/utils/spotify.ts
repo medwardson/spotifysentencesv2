@@ -1,155 +1,204 @@
 import { SearchResult, TrackObject } from "@/types/spotify";
 
-export const startCreationAttempt = async (
-  accessToken: string,
-  sentence: string,
-  title: string,
-  userId: string,
-  longerTitles: boolean
-): Promise<SearchResult> => {
-  const words = splitSentence(sentence);
-  const songUris = await getSongs(
-    accessToken,
-    words,
-    [],
-    new Map(),
-    longerTitles
-  );
-  if (songUris?.length === 0 || !songUris) {
-    return { status: "failure", title };
-  }
+class SpotifyClient {
+    private headers: HeadersInit;
 
-  const { id, url } = await makePlaylist(accessToken, title, userId);
-  await addSongs(id, songUris, accessToken);
-
-  return { status: "success", url, title };
-};
-
-const splitSentence = (sentence: string) => {
-  return sentence
-    .split(" ")
-    .map((word) => word.replace(/[^A-Za-z0-9]/g, ""))
-    .filter((word) => word.length > 0);
-};
-
-const getSongs = async (
-  accessToken: string,
-  words: string[],
-  acc: string[],
-  memo: Map<string, false | [string, string]> = new Map(),
-  longerTitles: boolean = false
-): Promise<string[]> => {
-  if (words.length === 0) {
-    return acc;
-  }
-
-  for (let i = 0; i < words.length; i++) {
-    const slice = longerTitles ? words.length - i : i + 1;
-    const curName = words.slice(0, slice).join(" ").toLowerCase();
-    const url =
-      "https://api.spotify.com/v1/search" +
-      `?q=${curName}` +
-      "&type=track&limit=50";
-
-    // Memoization to prevent duplicate requests
-    const songData = await (async () => {
-      if (memo.has(curName)) {
-        return memo.get(curName);
-      }
-      const data = await searchSong(url, accessToken, curName);
-      memo.set(curName, data);
-      return data;
-    })();
-
-    if (!songData) {
-      continue;
-    } else {
-      const returned = await getSongs(
-        accessToken,
-        words.slice(slice, words.length),
-        [...acc, songData[1]],
-        memo,
-        longerTitles
-      );
-      if (returned.length !== 0) {
-        return returned;
-      }
+    constructor(private accessToken: string, private userId: string) {
+        this.headers = {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+        };
     }
-  }
 
-  return [];
-};
+    private url(name: string) {
+        return `https://api.spotify.com/v1/search?q=${name}&type=track&limit=50`;
+    }
 
-const searchSong = async (
-  url: string,
-  accessToken: string,
-  songName: string
-): Promise<false | [string, string]> => {
-  return fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const results = data.tracks;
+    async startCreationAttempt(
+        sentence: string,
+        title: string,
+        longerTitles: boolean
+    ): Promise<SearchResult> {
+        const words = this.splitSentence(sentence);
 
-      if (results.total === 0) {
-        return false;
-      }
+        const songUris = await (async () => {
+            if (longerTitles) {
+                return this.getSongsLong(words, [], new Map());
+            } else {
+                return this.getSongsShort(words, new Map());
+            }
+        })();
+        if (songUris?.length === 0 || !songUris) {
+            return { status: "failure", title };
+        }
 
-      const items: TrackObject[] = results.items;
+        const { id, url } = await this.makePlaylist(title);
+        await this.addSongs(id, songUris);
 
-      const match = items.find((item) => item.name.toLowerCase() === songName);
+        return { status: "success", url, title };
+    }
 
-      if (match) {
-        return [match.name, match.uri];
-      }
+    private splitSentence(sentence: string) {
+        return sentence
+            .split(" ")
+            .map((word) => word.replace(/[^A-Za-z0-9]/g, ""))
+            .filter((word) => word.length > 0);
+    }
 
-      // If there are more pages of results, search them, but only if it's
-      // a shorter song title. Longer song title would be unlikely to be hidden
-      if (results.next && songName.split(" ").length <= 2) {
-        return searchSong(results.next, accessToken, songName);
-      }
+    // Divide and Conquer
+    private async getSongsShort(
+        words: string[],
+        memo: Map<string, false | [string, string]> = new Map()
+    ): Promise<string[]> {
+        if (words.length === 1) {
+            const name = words[0].toLowerCase();
 
-      return false;
-    });
-};
+            const songData = await (async () => {
+                if (memo.has(name)) {
+                    return memo.get(name);
+                }
+                const data = await this.searchSong(this.url(name), name);
+                memo.set(name, data);
+                return data;
+            })();
 
-const makePlaylist = async (
-  accessToken: string,
-  title: string,
-  userId: string
-) => {
-  return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: title,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      return { id: data.id, url: data.external_urls.spotify };
-    });
-};
+            if (!songData) {
+                return [];
+            }
 
-const addSongs = async (
-  playlistId: string,
-  songUris: string[],
-  accessToken: string
-) => {
-  fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      uris: songUris,
-    }),
-  });
-};
+            return [songData[1]];
+        } else if (words.length >= 2) {
+            // split into half
+            const half = Math.floor(words.length / 2);
+            const firstHalf = words.slice(0, half);
+            const secondHalf = words.slice(half, words.length);
+            const firstHalfPromise = this.getSongsShort(firstHalf, memo);
+            const secondHalfPromise = this.getSongsShort(secondHalf, memo);
+
+            // if the results of of length words, then return
+            const firstHalfSongs = await firstHalfPromise;
+            const secondHalfSongs = await secondHalfPromise;
+
+            if (
+                firstHalfSongs.length + secondHalfSongs.length ===
+                words.length
+            ) {
+                return [...firstHalfSongs, ...secondHalfSongs];
+            }
+        }
+
+        return this.getSongsLong(words, [], memo);
+    }
+
+    private async getSongsLong(
+        words: string[],
+        acc: string[],
+        memo: Map<string, false | [string, string]> = new Map()
+    ): Promise<string[]> {
+        if (words.length === 0) {
+            return acc;
+        }
+
+        for (let i = 0; i < words.length; i++) {
+            const slice = words.length - i;
+            const curName = words.slice(0, slice).join(" ").toLowerCase();
+
+            // Memoization to prevent duplicate requests
+            const songData = await (async () => {
+                if (memo.has(curName)) {
+                    return memo.get(curName);
+                }
+                const data = await this.searchSong(this.url(curName), curName);
+                memo.set(curName, data);
+                return data;
+            })();
+
+            if (!songData) {
+                continue;
+            } else {
+                const returned = await this.getSongsLong(
+                    words.slice(slice, words.length),
+                    [...acc, songData[1]],
+                    memo
+                );
+                if (returned.length !== 0) {
+                    return returned;
+                }
+            }
+        }
+
+        return [];
+    }
+
+    private async searchSong(
+        url: string,
+        songName: string
+    ): Promise<false | [string, string]> {
+        return fetch(url, {
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                const results = data.tracks;
+
+                if (results.total === 0) {
+                    return false;
+                }
+
+                const items: TrackObject[] = results.items;
+
+                const match = items.find(
+                    (item) => item.name.toLowerCase() === songName
+                );
+
+                if (match) {
+                    return [match.name, match.uri];
+                }
+
+                // If there are more pages of results, search them, but only if it's
+                // a shorter song title. Longer song title would be unlikely to be hidden
+                if (results.next && songName.split(" ").length <= 2) {
+                    return this.searchSong(results.next, songName);
+                }
+
+                return false;
+            });
+    }
+
+    private async makePlaylist(title: string) {
+        return fetch(
+            `https://api.spotify.com/v1/users/${this.userId}/playlists`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.accessToken}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: title,
+                }),
+            }
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                return { id: data.id, url: data.external_urls.spotify };
+            });
+    }
+
+    private async addSongs(playlistId: string, songUris: string[]) {
+        fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                uris: songUris,
+            }),
+        });
+    }
+}
+
+export default SpotifyClient;
