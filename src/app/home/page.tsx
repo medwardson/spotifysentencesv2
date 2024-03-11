@@ -13,11 +13,8 @@ export default function Main() {
     const router = useRouter();
 
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
-    const [sentence, setSentence] = useState<string>("");
-    const [title, setTitle] = useState<string>("");
     const [accessToken, setAccessToken] = useState<string>("");
     const [results, setResults] = useState<Array<SearchResult>>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const { id, display_name, images } = userInfo || {};
 
     useEffect(() => {
@@ -87,16 +84,10 @@ export default function Main() {
             ) : (
                 <>
                     <SearchForm
-                        sentence={sentence}
-                        title={title}
                         accessToken={accessToken}
                         userId={id}
-                        loading={loading}
                         results={results}
-                        setSentence={setSentence}
-                        setTitle={setTitle}
                         setResults={setResults}
-                        setLoading={setLoading}
                     />
                     <SearchHistory results={results} />
                 </>
