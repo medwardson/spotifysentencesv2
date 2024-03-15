@@ -15,7 +15,7 @@ export default function Main() {
     const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
     const [accessToken, setAccessToken] = useState<string>("");
     const [results, setResults] = useState<Array<SearchResult>>([]);
-    const { id, display_name, images } = userInfo || {};
+    const { id, display_name } = userInfo || {};
 
     useEffect(() => {
         const existingAccessToken = Cookies.get("access_token");
@@ -62,23 +62,10 @@ export default function Main() {
 
     return (
         <main className="flex flex-col items-center p-4 text-gray-800 w-full">
-            <div className="my-2">
-                {images?.[1]?.url && (
-                    <div className="w-full flex justify-center">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={images?.[1]?.url}
-                            alt="Profile Photo"
-                            width={96}
-                            height={96}
-                            className="rounded-full border-2 border-white mb-1"
-                        />
-                    </div>
-                )}
-                <div className="text-white">
-                    {id === undefined ? "" : display_name}
-                </div>
+            <div className="mt-4 text-white">
+                {id === undefined ? "" : `Logged in as ${display_name}`}
             </div>
+
             {id === undefined ? (
                 <CircularProgress color="inherit" />
             ) : (
