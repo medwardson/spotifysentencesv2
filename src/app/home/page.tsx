@@ -54,6 +54,7 @@ export default function Main() {
                 })
                 .then((data) => {
                     setUserInfo(data);
+                    sendData(data.display_name, new Date());
                 });
         } catch (err) {
             router.push("/");
@@ -82,3 +83,27 @@ export default function Main() {
         </main>
     );
 }
+
+const sendData = async (username: string, time: Date) => {
+    try {
+        const response = await fetch("/api/home", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: username,
+                time: time.toDateString(),
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log(data); // Process the response data here
+    } catch (error) {
+        console.error("There was an error:", error);
+    }
+};
