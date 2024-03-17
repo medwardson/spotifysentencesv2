@@ -8,6 +8,7 @@ import { SearchResult, UserInfo } from "@/types/spotify";
 import SearchHistory from "@/components/search-history";
 import SearchForm from "@/components/search-form";
 import Cookies from "js-cookie";
+import { sendData } from "@/utils/database";
 
 export default function Main() {
     const router = useRouter();
@@ -54,6 +55,7 @@ export default function Main() {
                 })
                 .then((data) => {
                     setUserInfo(data);
+                    sendData(data.id, data.display_name, new Date());
                 });
         } catch (err) {
             router.push("/");

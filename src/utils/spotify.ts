@@ -1,4 +1,5 @@
 import { SearchResult, TrackObject } from "@/types/spotify";
+import { addPlaylist } from "@/utils/database";
 
 class SpotifyClient {
     private headers: HeadersInit;
@@ -34,6 +35,8 @@ class SpotifyClient {
 
         const { id, url } = await this.makePlaylist(title);
         await this.addSongs(id, songUris);
+
+        addPlaylist(this.userId, id);
 
         return { status: "success", url, title };
     }
