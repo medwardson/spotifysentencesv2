@@ -1,5 +1,4 @@
 export const addPlaylist = async (userId: string, playlist: string) => {
-    console.log("Trying");
     try {
         const response = await fetch("/api/addPlaylist", {
             method: "POST",
@@ -22,7 +21,6 @@ export const addPlaylist = async (userId: string, playlist: string) => {
 
 export const sendData = async (id: string, username: string, time: Date) => {
     try {
-        console.log("HERE");
         const response = await fetch("/api/user", {
             method: "POST",
             headers: {
