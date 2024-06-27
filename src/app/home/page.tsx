@@ -9,6 +9,7 @@ import SearchHistory from "@/components/search-history";
 import SearchForm from "@/components/search-form";
 import Cookies from "js-cookie";
 import { sendData } from "@/utils/database";
+import GreenButton from "@/components/GreenButton";
 
 export default function Main() {
     const router = useRouter();
@@ -17,6 +18,12 @@ export default function Main() {
     const [accessToken, setAccessToken] = useState<string>("");
     const [results, setResults] = useState<Array<SearchResult>>([]);
     const { id, display_name } = userInfo || {};
+
+    const deleteCookie = () => {
+        Cookies.remove("access_token");
+        setAccessToken("");
+        router.push("/");
+    }
 
     useEffect(() => {
         const existingAccessToken = Cookies.get("access_token");
@@ -64,6 +71,13 @@ export default function Main() {
 
     return (
         <main className="flex flex-col items-center p-4 text-gray-800 w-full">
+            <div>
+                {/* <GreenButton
+                    text="Search History"
+                    onClick={() => router.push("/history")}
+                /> */}
+                <GreenButton text="Log Out" onClick={deleteCookie} />
+            </div>
             <div className="mt-4 text-white">
                 {id === undefined ? "" : `Logged in as ${display_name}`}
             </div>
