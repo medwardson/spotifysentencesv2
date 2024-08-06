@@ -40,3 +40,25 @@ export const sendData = async (id: string, username: string, time: Date) => {
         console.error("There was an error:", error);
     }
 };
+
+export const getPlaylistHistory = async (userId: string) => {
+    try {
+        const response = await fetch("/api/playlistHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch playlist history");
+        }
+
+        const data = await response.json();
+        return data.playlists;
+    } catch (error) {
+        console.error("Error fetching playlist history:", error);
+        throw error;
+    }
+};

@@ -10,76 +10,65 @@ import SearchForm from "@/components/search-form";
 import Cookies from "js-cookie";
 import { sendData } from "@/utils/database";
 import GreenButton from "@/components/GreenButton";
+import { useAppDispatch, useAppSelector } from "../../lib/hooks";
+import { setUser, clearUser } from "@/lib/store/userSlice";
+import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 
 export default function Main() {
+    const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo);
-    const [accessToken, setAccessToken] = useState<string>("");
+    const { id, displayName, accessToken } = useAppSelector(
+        (state) => state.user
+    );
+
     const [results, setResults] = useState<Array<SearchResult>>([]);
-    const { id, display_name } = userInfo || {};
 
     const deleteCookie = () => {
         Cookies.remove("access_token");
-        setAccessToken("");
+        dispatch(clearUser());
         router.push("/");
-    }
+    };
+
+    const getUserInfo = async (accessToken: string) => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchSpotifyUserData(accessToken);
+                dispatch(
+                    setUser({
+                        id: data.id,
+                        displayName: data.display_name,
+                        accessToken: accessToken,
+                    })
+                );
+                // Optional: Call sendData if needed
+                sendData(data.id, data.display_name, new Date());
+                router.push("/home");
+            } catch (error) {
+                router.push("/");
+            }
+        };
+        fetchData();
+    };
 
     useEffect(() => {
-        const existingAccessToken = Cookies.get("access_token");
-
-        if (existingAccessToken) {
-            setAccessToken(existingAccessToken);
-            return;
-        }
-
-        const hash = new URLSearchParams(window.location.hash);
-        const token = hash.get("#access_token");
-
-        if (!token) {
-            router.push("/");
-        } else {
-            setAccessToken(token);
-            Cookies.set("access_token", token, {
-                expires: 1 / 24,
-            });
-            const urlWithoutHash = window.location.href.split("#")[0];
-            window.history.pushState({}, document.title, urlWithoutHash);
-        }
+        if (accessToken) return;
+        router.push("/loading");
     }, []);
 
-    useEffect(() => {
-        if (accessToken === "") return;
-        try {
-            fetch("https://api.spotify.com/v1/me", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            })
-                .then((res) => {
-                    if (res.ok) return res.json();
-                    else router.push("/");
-                })
-                .then((data) => {
-                    setUserInfo(data);
-                    sendData(data.id, data.display_name, new Date());
-                });
-        } catch (err) {
-            router.push("/");
-        }
-    }, [accessToken]);
+    if (!accessToken) return null;
 
     return (
         <main className="flex flex-col items-center p-4 text-gray-800 w-full">
             <div>
-                {/* <GreenButton
+                <GreenButton
                     text="Search History"
                     onClick={() => router.push("/history")}
-                /> */}
+                />
                 <GreenButton text="Log Out" onClick={deleteCookie} />
             </div>
             <div className="mt-4 text-white">
-                {id === undefined ? "" : `Logged in as ${display_name}`}
+                {id === "" ? "" : `Logged in as ${displayName}`}
             </div>
 
             {id === undefined ? (

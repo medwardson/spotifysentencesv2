@@ -1,17 +1,21 @@
 "use client";
 
-import { Button } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../lib/hooks";
+import { setAccessToken } from "../lib/store/userSlice";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
+    const dispatch = useAppDispatch();
     const router = useRouter();
 
     useEffect(() => {
         const existingAccessToken = Cookies.get("access_token");
 
         if (existingAccessToken) {
+            dispatch(setAccessToken(existingAccessToken));
+
             router.push("/home");
         }
     }, []);
@@ -25,7 +29,7 @@ export default function Home() {
             "&scope=playlist-modify-public" +
             "&redirect_uri=" +
             process.env.NEXT_PUBLIC_BASE_URL +
-            "/home" +
+            "/loading" +
             "&show_dialog=true";
 
         window.location.assign(url);

@@ -28,5 +28,6 @@ export interface SearchResult {
 
 export interface UserInfo {
     id: string;
-    display_name: string;
+    displayName: string;
+    accessToken: string;
 }

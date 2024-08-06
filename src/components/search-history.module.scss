@@ -1,12 +1,12 @@
 .grid {
-  display: grid;
-  gap: 0;
-  overflow: hidden;
+    display: grid;
+    gap: 0;
+    overflow: hidden;
 }
 
 @media screen and (min-width: 768px) {
-  .grid {
-    grid-template-columns: auto 2fr;
-    gap: 1em;
-  }
+    .grid {
+        grid-template-columns: auto 2fr;
+        gap: 1em;
+    }
 }
