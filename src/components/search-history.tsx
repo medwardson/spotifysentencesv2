@@ -4,19 +4,19 @@ import { SearchResult } from "@/types/spotify";
 
 import styles from "./search-history.module.scss";
 import React from "react";
-interface SearchHistoryProps {
-    results: Array<SearchResult>;
-}
+import { useAppSelector } from "@/lib/hooks";
 
-export default function SearchHistory({ results }: SearchHistoryProps) {
+export default function SearchHistory() {
+    const { recentResults } = useAppSelector((state) => state.user);
+
     return (
         <div className="text-white w-full">
             <div className="text-2xl text-center my-4 font-bold">
                 Previous Results
             </div>
-            {results.length > 0 ? (
+            {recentResults.length > 0 ? (
                 <div className={styles.grid}>
-                    {results.map((result, i) => (
+                    {recentResults.map((result, i) => (
                         <React.Fragment key={i}>
                             <div className="text-left font-bold">
                                 {result.title}:

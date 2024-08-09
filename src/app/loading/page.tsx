@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { sendData } from "@/utils/database";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setUser } from "@/lib/store/userSlice";
+import { setUserInfo } from "@/lib/store/userSlice";
 import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 import { CircularProgress } from "@mui/material";
 
@@ -13,7 +13,7 @@ export default function Main() {
     const router = useRouter();
     const dispatch = useAppDispatch();
 
-    const { accessToken } = useAppSelector((state) => state.user);
+    const { accessToken } = useAppSelector((state) => state.user.info);
 
     useEffect(() => {
         if (accessToken) {
@@ -47,7 +47,7 @@ export default function Main() {
             try {
                 const data = await fetchSpotifyUserData(accessToken);
                 dispatch(
-                    setUser({
+                    setUserInfo({
                         id: data.id,
                         displayName: data.display_name,
                         accessToken: accessToken,

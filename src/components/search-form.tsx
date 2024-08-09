@@ -9,25 +9,22 @@ import {
 import { useState } from "react";
 
 import { InfoSharp } from "@mui/icons-material";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { addRecentResult } from "@/lib/store/userSlice";
 
-interface SearchFormProps {
-    accessToken: string;
-    userId: string;
-    results: Array<SearchResult>;
-    setResults: (results: Array<SearchResult>) => void;
-}
+export default function SearchForm() {
+    const dispatch = useAppDispatch();
+    const { id, accessToken } = useAppSelector((state) => state.user.info);
 
-export default function SearchForm({
-    accessToken,
-    userId,
-    results,
-    setResults,
-}: SearchFormProps) {
+    if (!accessToken || !id) return;
+
     const [longerTitles, setlongerTitles] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [sentence, setSentence] = useState<string>("");
     const [title, setTitle] = useState<string>("");
-    const client = new SpotifyClient(accessToken, userId);
+
+    // TODO: maybe we can use DI
+    const client = new SpotifyClient(accessToken, id);
 
     return (
         <form
@@ -38,8 +35,8 @@ export default function SearchForm({
                 setLoading(true);
                 client
                     .startCreationAttempt(sentence, title, longerTitles)
-                    .then((res: SearchResult) => {
-                        setResults([...results, res]);
+                    .then((sr: SearchResult) => {
+                        dispatch(addRecentResult({ sr }));
                         setLoading(false);
                     })
                     .catch((err: any) => {
@@ -66,33 +63,31 @@ export default function SearchForm({
                 className="w-full bg-white px-3 py-1 rounded-xl mx-1 !text-sm"
                 name="title"
                 onChange={(e) => setTitle(e.target.value)}
-            ></Input>
+            />
             <div className="flex w-full justify-center items-center my-1 flex-wrap">
                 <div className="flex items-center">
-                    <div className="flex items-center">
-                        <button
-                            disabled={!longerTitles}
-                            className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap mr-2 text-sm"
-                            type="submit"
-                            onClick={() => setlongerTitles(false)}
-                        >
-                            SHORT TITLES
-                        </button>
-                        <button
-                            disabled={longerTitles}
-                            className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap text-sm"
-                            type="submit"
-                            onClick={() => setlongerTitles(true)}
-                        >
-                            LONG TITLES
-                        </button>
-                        <Tooltip
-                            enterTouchDelay={0}
-                            title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run."
-                        >
-                            <InfoSharp className="text-gray-100 mx-2 text-md" />
-                        </Tooltip>
-                    </div>
+                    <button
+                        disabled={!longerTitles}
+                        className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap mr-2 text-sm"
+                        type="submit"
+                        onClick={() => setlongerTitles(false)}
+                    >
+                        SHORT TITLES
+                    </button>
+                    <button
+                        disabled={longerTitles}
+                        className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-100 disabled:text-white text-green-900 opacity-50 my-3 px-4 py-2.5 whitespace-nowrap text-sm"
+                        type="submit"
+                        onClick={() => setlongerTitles(true)}
+                    >
+                        LONG TITLES
+                    </button>
+                    <Tooltip
+                        enterTouchDelay={0}
+                        title="Option to prefer shorter or longer song titles in the playlist. Long titles will take longer to run."
+                    >
+                        <InfoSharp className="text-gray-100 mx-2 text-md" />
+                    </Tooltip>
                 </div>
             </div>
             <button

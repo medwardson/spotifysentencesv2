@@ -27,7 +27,7 @@ export interface SearchResult {
 }
 
 export interface UserInfo {
-    id: string;
-    displayName: string;
-    accessToken: string;
+    id: string | undefined;
+    accessToken: string | undefined;
+    displayName: string | undefined;
 }

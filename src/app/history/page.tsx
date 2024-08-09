@@ -7,7 +7,7 @@ import { useAppSelector } from "../../lib/hooks";
 import { CircularProgress } from "@mui/material";
 
 export default function Main() {
-    const { id } = useAppSelector((state) => state.user);
+    const { id } = useAppSelector((state) => state.user.info);
 
     const [playlists, setPlaylists] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);

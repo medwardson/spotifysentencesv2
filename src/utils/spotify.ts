@@ -4,7 +4,7 @@ import { addPlaylist } from "@/utils/database";
 class SpotifyClient {
     private headers: HeadersInit;
 
-    constructor(private accessToken: string, private userId: string) {
+    constructor(accessToken: string, private userId: string) {
         this.headers = {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
@@ -137,11 +137,7 @@ class SpotifyClient {
         url: string,
         songName: string
     ): Promise<false | [string, string]> {
-        return fetch(url, {
-            headers: {
-                Authorization: `Bearer ${this.accessToken}`,
-            },
-        })
+        return fetch(url, { headers: this.headers })
             .then((res) => res.json())
             .then((data) => {
                 const results = data.tracks;
@@ -175,10 +171,7 @@ class SpotifyClient {
             `https://api.spotify.com/v1/users/${this.userId}/playlists`,
             {
                 method: "POST",
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`,
-                    "Content-Type": "application/json",
-                },
+                headers: this.headers,
                 body: JSON.stringify({
                     name: title,
                 }),
@@ -193,10 +186,7 @@ class SpotifyClient {
     private async addSongs(playlistId: string, songUris: string[]) {
         fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${this.accessToken}`,
-                "Content-Type": "application/json",
-            },
+            headers: this.headers,
             body: JSON.stringify({
                 uris: songUris,
             }),
