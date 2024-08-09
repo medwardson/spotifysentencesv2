@@ -6,19 +6,23 @@ export default async function handler(
     res: NextApiResponse
 ) {
     if (req.method === "POST") {
-        const { userId, playlist } = req.body;
+        const { userId, url, title } = req.body;
         const userRef = db.collection("users").doc(userId);
 
         try {
+            console.log("Adding");
             await userRef.update({
-                playlists: admin.firestore.FieldValue.arrayUnion(playlist),
+                searchHistory: admin.firestore.FieldValue.arrayUnion({
+                    title,
+                    url,
+                }),
             });
 
             res.status(200).json({ message: "Playlist added successfully" });
         } catch (error: any) {
             if (error.code === "not-found") {
                 await userRef.set({
-                    playlists: [playlist],
+                    searchHistory: [{ title, url }],
                 });
                 return res
                     .status(200)

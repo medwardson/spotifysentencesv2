@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../utils/firebaseAdmin";
+import { SearchResult } from "@/types/spotify";
 
 export default async function handler(
     req: NextApiRequest,
@@ -11,14 +12,21 @@ export default async function handler(
 
         try {
             const doc = await userRef.get();
-            let playlists = [];
+            let searchHistory = [];
 
             if (doc.exists) {
                 const userData = doc.data();
-                playlists = userData?.playlists || [];
+                searchHistory = userData?.searchHistory || [];
             }
 
-            res.status(200).json({ playlists });
+            const result: SearchResult[] = searchHistory.map((item: any) => {
+                return {
+                    ...item,
+                    status: "success",
+                };
+            });
+
+            res.status(200).json({ result });
         } catch (error) {
             console.error("Error getting document:", error);
             res.status(500).json({ error: "Failed to get user data" });

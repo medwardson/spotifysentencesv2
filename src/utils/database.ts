@@ -1,4 +1,6 @@
-export const addPlaylist = async (userId: string, playlist: string) => {
+import { SearchResult } from "@/types/spotify";
+
+export const addPlaylist = async (userId: string, sr: SearchResult) => {
     try {
         const response = await fetch("/api/addPlaylist", {
             method: "POST",
@@ -7,7 +9,7 @@ export const addPlaylist = async (userId: string, playlist: string) => {
             },
             body: JSON.stringify({
                 userId,
-                playlist,
+                ...sr,
             }),
         });
 
@@ -56,7 +58,7 @@ export const getPlaylistHistory = async (userId: string) => {
         }
 
         const data = await response.json();
-        return data.playlists;
+        return data.result as SearchResult[];
     } catch (error) {
         console.error("Error fetching playlist history:", error);
         throw error;

@@ -1,38 +1,22 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import { setAccessToken } from "../lib/store/userSlice";
+import { useAppDispatch } from "../lib/hooks";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { loginUrl } from "@/utils/spotify";
 
 export default function Home() {
-    const dispatch = useAppDispatch();
     const router = useRouter();
 
     useEffect(() => {
         const existingAccessToken = Cookies.get("access_token");
 
-        if (existingAccessToken) {
-            dispatch(setAccessToken(existingAccessToken));
-
-            router.push("/home");
-        }
+        if (existingAccessToken) router.push("/loading");
     }, []);
 
     function login() {
-        const url =
-            "https://accounts.spotify.com/authorize" +
-            "?response_type=token" +
-            "&client_id=" +
-            process.env.NEXT_PUBLIC_CLIENT_ID +
-            "&scope=playlist-modify-public" +
-            "&redirect_uri=" +
-            process.env.NEXT_PUBLIC_BASE_URL +
-            "/loading" +
-            "&show_dialog=true";
-
-        window.location.assign(url);
+        window.location.assign(loginUrl);
     }
 
     return (

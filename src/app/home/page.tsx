@@ -14,6 +14,7 @@ export default function Main() {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
+    const { recentResults } = useAppSelector((state) => state.user);
     const { id, displayName, accessToken } = useAppSelector(
         (state) => state.user.info
     );
@@ -47,7 +48,10 @@ export default function Main() {
                         Logged in as {displayName}
                     </div>
                     <SearchForm />
-                    <SearchHistory />
+                    <SearchHistory
+                        title="Recent Results"
+                        results={recentResults}
+                    />
                 </>
             ) : (
                 <CircularProgress color="inherit" />

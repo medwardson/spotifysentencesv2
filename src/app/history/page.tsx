@@ -5,11 +5,13 @@ import { getPlaylistHistory } from "@/utils/database";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "../../lib/hooks";
 import { CircularProgress } from "@mui/material";
+import { SearchResult } from "@/types/spotify";
+import SearchHistory from "@/components/search-history";
 
 export default function Main() {
     const { id } = useAppSelector((state) => state.user.info);
 
-    const [playlists, setPlaylists] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -21,8 +23,8 @@ export default function Main() {
 
         const fetchPlaylists = async () => {
             try {
-                const playlists = await getPlaylistHistory(id);
-                setPlaylists(playlists);
+                const searchResults = await getPlaylistHistory(id);
+                setSearchResults(searchResults);
             } catch (error) {
                 console.error("Error fetching playlists:", error);
             }
@@ -34,30 +36,10 @@ export default function Main() {
 
     return (
         <main className="flex flex-col items-center p-4 text-white w-full">
-            <h1>History</h1>
-
             {loading ? (
                 <CircularProgress />
             ) : (
-                <>
-                    {playlists.length === 0 ? (
-                        <p>No playlists found</p>
-                    ) : (
-                        <ul>
-                            {playlists.map((playlist) => (
-                                <li key={playlist}>
-                                    <a
-                                        href={`https://open.spotify.com/playlist/${playlist}`}
-                                        target="_blank"
-                                        className="text-left text-green-400 mb-2"
-                                    >
-                                        {playlist}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </>
+                <SearchHistory title="History" results={searchResults} />
             )}
         </main>
     );

@@ -16,14 +16,13 @@ export default function SearchForm() {
     const dispatch = useAppDispatch();
     const { id, accessToken } = useAppSelector((state) => state.user.info);
 
-    if (!accessToken || !id) return;
-
     const [longerTitles, setlongerTitles] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [sentence, setSentence] = useState<string>("");
     const [title, setTitle] = useState<string>("");
 
     // TODO: maybe we can use DI
+    if (!accessToken || !id) return;
     const client = new SpotifyClient(accessToken, id);
 
     return (

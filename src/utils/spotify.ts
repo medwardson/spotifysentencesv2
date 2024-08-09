@@ -1,6 +1,17 @@
 import { SearchResult, TrackObject } from "@/types/spotify";
 import { addPlaylist } from "@/utils/database";
 
+export const loginUrl =
+    "https://accounts.spotify.com/authorize" +
+    "?response_type=token" +
+    "&client_id=" +
+    process.env.NEXT_PUBLIC_CLIENT_ID +
+    "&scope=playlist-modify-public" +
+    "&redirect_uri=" +
+    process.env.NEXT_PUBLIC_BASE_URL +
+    "/loading" +
+    "&show_dialog=true";
+
 class SpotifyClient {
     private headers: HeadersInit;
 
@@ -33,12 +44,14 @@ class SpotifyClient {
             return { status: "failure", title };
         }
 
-        const { id, url } = await this.makePlaylist(title);
-        await this.addSongs(id, songUris);
+        const { playlistId, url } = await this.makePlaylist(title);
+        await this.addSongs(playlistId, songUris);
 
-        addPlaylist(this.userId, id);
+        const result: SearchResult = { status: "success", url, title };
 
-        return { status: "success", url, title };
+        addPlaylist(this.userId, result);
+
+        return result;
     }
 
     private splitSentence(sentence: string) {
@@ -179,7 +192,7 @@ class SpotifyClient {
         )
             .then((res) => res.json())
             .then((data) => {
-                return { id: data.id, url: data.external_urls.spotify };
+                return { playlistId: data.id, url: data.external_urls.spotify };
             });
     }
 
