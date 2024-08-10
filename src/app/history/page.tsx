@@ -25,10 +25,11 @@ export default function Main() {
             try {
                 const searchResults = await getPlaylistHistory(id);
                 setSearchResults(searchResults);
+                setLoading(false);
             } catch (error) {
-                console.error("Error fetching playlists:", error);
+                setLoading(false);
+                throw new Error("Connection Timed Out");
             }
-            setLoading(false);
         };
 
         fetchPlaylists();

@@ -1,66 +1,69 @@
 import { SearchResult } from "@/types/spotify";
 
 export const addPlaylist = async (userId: string, sr: SearchResult) => {
-    try {
-        const response = await fetch("/api/addPlaylist", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                userId,
-                ...sr,
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-    } catch (error) {
-        console.error("There was an error:", error);
-    }
+    await fetch("/api/addPlaylist", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userId,
+            ...sr,
+        }),
+    });
 };
 
 export const sendData = async (id: string, username: string, time: Date) => {
-    try {
-        const response = await fetch("/api/user", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: id,
-                username: username,
-                time: time.toDateString(),
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-    } catch (error) {
-        console.error("There was an error:", error);
-    }
+    await fetchWithTimeout("/api/user", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: id,
+            username: username,
+            time: time.toDateString(),
+        }),
+    });
 };
 
 export const getPlaylistHistory = async (userId: string) => {
+    const response = await fetchWithTimeout("/api/playlistHistory", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+    });
+
+    const data = await response.json();
+    return data.result as SearchResult[];
+};
+
+const fetchWithTimeout = async (
+    url: string,
+    options: RequestInit = {},
+    timeout: number = 5000
+) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    options.signal = controller.signal;
+
     try {
-        const response = await fetch("/api/playlistHistory", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-        });
+        const response = await fetch(url, options);
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
-            throw new Error("Failed to fetch playlist history");
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
-        return data.result as SearchResult[];
+        return response;
     } catch (error) {
-        console.error("Error fetching playlist history:", error);
+        if (error instanceof Error && error.name === "AbortError") {
+            console.error("Fetch request timed out");
+        } else {
+            console.error("Fetch request failed", error);
+        }
         throw error;
     }
 };
