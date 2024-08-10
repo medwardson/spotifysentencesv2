@@ -5,8 +5,8 @@ import { getPlaylistHistory } from "@/utils/database";
 import { useAppSelector } from "@/lib/hooks";
 import { CircularProgress } from "@mui/material";
 import { SearchResult } from "@/types/spotify";
-import SearchHistory from "@/components/search-history";
 import withAuth from "@/components/useAuth";
+import SearchHistory from "@/components/search/searchHistory/SearchHistory";
 
 function Main() {
     const { id } = useAppSelector((state) => state.user.info);

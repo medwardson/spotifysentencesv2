@@ -2,7 +2,7 @@
 
 import { SearchResult } from "@/types/spotify";
 
-import styles from "./search-history.module.scss";
+import styles from "./SearchHistory.module.scss";
 import React from "react";
 
 interface SearchHistoryProps {

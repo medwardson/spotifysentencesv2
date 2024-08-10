@@ -2,9 +2,8 @@
 
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import SearchHistory from "@/components/search-history";
-import SearchForm from "@/components/search-form";
+import SearchHistory from "@/components/search/searchHistory/SearchHistory";
+import SearchForm from "@/components/search/SearchForm";
 import Cookies from "js-cookie";
 import GreenButton from "@/components/GreenButton";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
