@@ -9,7 +9,7 @@ import { setUserInfo } from "@/lib/store/userSlice";
 import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 import { CircularProgress } from "@mui/material";
 
-export default function Main() {
+function Main() {
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -72,3 +72,5 @@ export default function Main() {
         </main>
     );
 }
+
+export default Main;

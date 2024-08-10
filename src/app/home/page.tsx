@@ -9,28 +9,20 @@ import Cookies from "js-cookie";
 import GreenButton from "@/components/GreenButton";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { clearUserInfo } from "@/lib/store/userSlice";
+import withAuth from "@/components/useAuth";
 
-export default function Main() {
+function Main() {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
     const { recentResults } = useAppSelector((state) => state.user);
-    const { id, displayName, accessToken } = useAppSelector(
-        (state) => state.user.info
-    );
+    const { id, displayName } = useAppSelector((state) => state.user.info);
 
     const deleteCookie = () => {
         Cookies.remove("access_token");
         dispatch(clearUserInfo());
         router.push("/");
     };
-
-    useEffect(() => {
-        if (accessToken) return;
-        router.push("/loading");
-    }, []);
-
-    if (!accessToken) return null;
 
     return (
         <main className="flex flex-col items-center p-4 text-gray-800 w-full">
@@ -59,3 +51,5 @@ export default function Main() {
         </main>
     );
 }
+
+export default withAuth(Main);

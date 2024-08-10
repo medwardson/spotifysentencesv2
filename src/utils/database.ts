@@ -43,13 +43,13 @@ export const getPlaylistHistory = async (userId: string) => {
 const fetchWithTimeout = async (
     url: string,
     options: RequestInit = {},
-    timeout: number = 5000
+    timeout: number = 7500
 ) => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
     options.signal = controller.signal;
 
     try {
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
         const response = await fetch(url, options);
         clearTimeout(timeoutId);
 

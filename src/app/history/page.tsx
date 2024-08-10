@@ -2,28 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { getPlaylistHistory } from "@/utils/database";
-import { useRouter } from "next/navigation";
-import { useAppSelector } from "../../lib/hooks";
+import { useAppSelector } from "@/lib/hooks";
 import { CircularProgress } from "@mui/material";
 import { SearchResult } from "@/types/spotify";
 import SearchHistory from "@/components/search-history";
+import withAuth from "@/components/useAuth";
 
-export default function Main() {
+function Main() {
     const { id } = useAppSelector((state) => state.user.info);
 
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
 
     useEffect(() => {
-        if (!id) {
-            router.push("/loading");
-            return;
-        }
-
         const fetchPlaylists = async () => {
             try {
-                const searchResults = await getPlaylistHistory(id);
+                const searchResults = await getPlaylistHistory(id!);
                 setSearchResults(searchResults);
                 setLoading(false);
             } catch (error) {
@@ -45,3 +39,5 @@ export default function Main() {
         </main>
     );
 }
+
+export default withAuth(Main);
