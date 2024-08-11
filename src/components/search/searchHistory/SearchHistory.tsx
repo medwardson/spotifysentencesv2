@@ -30,7 +30,7 @@ export default function SearchHistory({ title, results }: SearchHistoryProps) {
                                             target="_blank"
                                             className="text-left text-green-400 mb-2"
                                         >
-                                            {result.url}
+                                            {result.url?.slice(25)}
                                         </a>
                                     ) : (
                                         <p className="text-left text-red-400 mb-2">
