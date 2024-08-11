@@ -2,17 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { getPlaylistHistory } from "@/utils/database";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { CircularProgress } from "@mui/material";
 import { SearchResult } from "@/types/spotify";
 import withAuth from "@/components/useAuth";
 import SearchHistory from "@/components/search/searchHistory/SearchHistory";
 import { useHeader } from "@/components/HeaderContext";
+import { setFullHistory } from "@/lib/store/userSlice";
 
 function Main() {
+    const dispatch = useAppDispatch();
     const { id } = useAppSelector((state) => state.user.info);
+    const { fullHistory } = useAppSelector((state) => state.user);
+
     const { setShowBackButton, setShowLogoutButton } = useHeader();
-    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,8 +26,8 @@ function Main() {
     useEffect(() => {
         const fetchPlaylists = async () => {
             try {
-                const searchResults = await getPlaylistHistory(id!);
-                setSearchResults(searchResults);
+                const history = await getPlaylistHistory(id!);
+                dispatch(setFullHistory(history));
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -32,7 +35,11 @@ function Main() {
             }
         };
 
-        fetchPlaylists();
+        if (fullHistory?.length === 0) {
+            fetchPlaylists();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     return (
@@ -41,7 +48,7 @@ function Main() {
                 {loading ? (
                     <CircularProgress />
                 ) : (
-                    <SearchHistory title="History" results={searchResults} />
+                    <SearchHistory title="History" results={fullHistory} />
                 )}
             </main>
         </>

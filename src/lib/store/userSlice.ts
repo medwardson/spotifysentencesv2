@@ -9,6 +9,7 @@ const initialState: User = {
         accessToken: undefined,
     },
     recentResults: [],
+    fullHistory: [],
 };
 
 const userSlice = createSlice({
@@ -27,10 +28,8 @@ const userSlice = createSlice({
             state.info.accessToken = action.payload.accessToken;
             state.info.displayName = action.payload.displayName;
         },
-        clearUserInfo: (state) => {
-            state.info.id = undefined;
-            state.info.displayName = undefined;
-            state.info.accessToken = undefined;
+        clearUserInfo: () => {
+            return initialState;
         },
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.info.accessToken = action.payload;
@@ -39,11 +38,23 @@ const userSlice = createSlice({
             state,
             action: PayloadAction<{ sr: SearchResult }>
         ) => {
-            state.recentResults = [action.payload.sr, ...state.recentResults];
+            state.recentResults.unshift(action.payload.sr);
+
+            if (state.fullHistory.length > 1)
+                state.fullHistory.unshift(action.payload.sr);
+        },
+        setFullHistory: (state, action: PayloadAction<SearchResult[]>) => {
+            state.fullHistory = action.payload;
         },
     },
 });
 
-export const { setUserInfo, clearUserInfo, setAccessToken, addRecentResult } =
-    userSlice.actions;
+export const {
+    setUserInfo,
+    clearUserInfo,
+    setAccessToken,
+    addRecentResult,
+    setFullHistory,
+} = userSlice.actions;
+
 export default userSlice.reducer;
