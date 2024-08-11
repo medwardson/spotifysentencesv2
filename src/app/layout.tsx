@@ -1,3 +1,5 @@
+"use client";
+
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -7,30 +9,33 @@ import styles from "@/app/layout.module.scss";
 import Header from "@/components/header";
 import { Analytics } from "@vercel/analytics/react";
 import StoreProvider from "./StoreProvider";
+import { HeaderProvider, useHeader } from "@/components/HeaderContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "Spotify Sentences",
-    description: "Creating fun spotify playlists",
-};
-
-export default function RootLayout({
-    children,
-}: {
+interface RootLayoutProps {
     children: React.ReactNode;
-}) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en">
             <body
                 className={`${inter.className} ${styles.body} flex flex-col items-center`}
             >
-                <Header />
                 <StoreProvider>
-                    <div className="h-full w-full">{children}</div>
+                    <HeaderProvider>
+                        <HeaderWrapper />
+                        {children}
+                    </HeaderProvider>
                 </StoreProvider>
                 <Analytics />
             </body>
         </html>
     );
+}
+
+function HeaderWrapper() {
+    const { showBackButton, showLogoutButton } = useHeader();
+    return <Header back={showBackButton} logout={showLogoutButton} />;
 }

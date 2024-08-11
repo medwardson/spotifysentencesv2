@@ -8,22 +8,27 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setUserInfo } from "@/lib/store/userSlice";
 import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 import { CircularProgress } from "@mui/material";
+import { useHeader } from "@/components/HeaderContext";
 
 function Main() {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const { setShowBackButton, setShowLogoutButton } = useHeader();
 
     const { accessToken } = useAppSelector((state) => state.user.info);
+
+    useEffect(() => {
+        setShowBackButton(false);
+        setShowLogoutButton(true);
+    }, []);
 
     useEffect(() => {
         if (accessToken) {
             router.push("/home");
             return;
         }
-
         const hash = new URLSearchParams(window.location.hash);
         const newToken = hash.get("#access_token");
-
         if (newToken) {
             Cookies.set("access_token", newToken, {
                 expires: 1 / 24,
@@ -31,14 +36,11 @@ function Main() {
             getUserInfo(newToken);
             return;
         }
-
         const existingAccessToken = Cookies.get("access_token");
-
         if (existingAccessToken) {
             getUserInfo(existingAccessToken);
             return;
         }
-
         router.push("/");
     }, []);
 
@@ -64,12 +66,14 @@ function Main() {
     };
 
     return (
-        <main className="flex flex-col items-center p-4 text-white w-full">
-            <div className="flex flex-col items-center justify-center h-full">
-                <h1 className="text-3xl font-bold mb-4">Loading...</h1>
-                <CircularProgress />
-            </div>
-        </main>
+        <>
+            <main className="flex flex-col items-center p-4 text-white w-full h-full">
+                <div className="flex flex-col items-center justify-center h-1/2">
+                    <h1 className="text-3xl font-bold mb-4">Loading...</h1>
+                    <CircularProgress />
+                </div>
+            </main>
+        </>
     );
 }
 
