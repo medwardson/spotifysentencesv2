@@ -12,18 +12,20 @@ export const Profile = () => {
     const router = useRouter();
     const { displayName } = useAppSelector((state) => state.user.info);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
 
-    const getInitials = (name: string): string => {
+    const getInitials = (name: string): string | null => {
         const initials = name.match(/\b\w/g) || [];
-        return (
-            (initials.shift() || "") + (initials.pop() || "")
-        ).toUpperCase();
+        const result =
+            (initials.shift() || "") + (initials.pop() || "").toUpperCase();
+
+        if (result.length > 1) return result;
+        return null;
     };
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -34,24 +36,20 @@ export const Profile = () => {
         router.push("/");
     };
 
+    const open = Boolean(anchorEl);
+    const initials = getInitials(displayName ?? "");
+
     return (
         <>
             {" "}
-            <button
-                className="border rounded-full flex"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-            >
-                {displayName ? (
-                    <p className="p-1">{getInitials(displayName)}</p>
+            <button className="border rounded-full flex" onClick={handleClick}>
+                {initials ? (
+                    <p className="p-1">{initials}</p>
                 ) : (
                     <AccountCircleIcon />
                 )}
             </button>
             <Menu
-                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}

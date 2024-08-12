@@ -47,8 +47,7 @@ export default function SearchForm() {
             }}
         >
             <TextareaAutosize
-                className="mb-4 w-full text-sm font-normal font-sans leading-5 p-3 rounded-xl rounded-br-none focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 text-slate-900 focus-visible:outline-0"
-                aria-label="Demo input"
+                className="mb-4 w-full text-sm leading-5 p-3 rounded-xl rounded-br-none focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 text-slate-900 focus-visible:outline-0"
                 placeholder="Sentence to convert..."
                 name="sentence"
                 value={sentence}
@@ -71,7 +70,7 @@ export default function SearchForm() {
                         type="submit"
                         onClick={() => setlongerTitles(false)}
                     >
-                        SHORT TITLES
+                        Short Titles
                     </button>
                     <button
                         disabled={longerTitles}
@@ -79,7 +78,7 @@ export default function SearchForm() {
                         type="submit"
                         onClick={() => setlongerTitles(true)}
                     >
-                        LONG TITLES
+                        Long Titles
                     </button>
                     <Tooltip
                         enterTouchDelay={0}
@@ -91,13 +90,13 @@ export default function SearchForm() {
             </div>
             <button
                 disabled={!title || !sentence || loading}
-                className="bg-green-700 rounded-md hover:bg-green-500 disabled:opacity-50 text-white disabled:text-green-900 px-4 py-2.5 whitespace-nowrap text-sm w-1/2"
+                className="bg-green-700 rounded-md enabled:hover:bg-green-500 disabled:opacity-50 text-white disabled:text-green-900 px-4 py-2.5 whitespace-nowrap text-sm w-1/2"
                 type="submit"
             >
                 {loading ? (
                     <CircularProgress size={20} color="inherit" />
                 ) : (
-                    "SUBMIT"
+                    "Submit"
                 )}
             </button>
         </form>
