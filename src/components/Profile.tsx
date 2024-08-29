@@ -49,14 +49,7 @@ export const Profile = () => {
                     <AccountCircleIcon />
                 )}
             </button>
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                }}
-            >
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <MenuItem dense onClick={handleClose}>
                     {" "}
                     <button

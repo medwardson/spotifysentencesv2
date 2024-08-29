@@ -24,7 +24,7 @@ function Main() {
 
     return (
         <>
-            <main className="flex flex-col items-center p-4 text-gray-800 w-full overflow-scroll">
+            <main className="flex flex-col items-center p-4 text-gray-800 w-full h-full overflow-scroll">
                 <div>
                     <GreenButton
                         text="Search History"
