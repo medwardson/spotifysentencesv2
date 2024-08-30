@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { getPlaylistHistory } from "@/utils/database";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { CircularProgress } from "@mui/material";
-import { SearchResult } from "@/types/spotify";
 import withAuth from "@/components/useAuth";
 import SearchHistory from "@/components/search/searchHistory/SearchHistory";
-import { useHeader } from "@/components/HeaderContext";
 import { setFullHistory } from "@/lib/store/userSlice";
 
 function Main() {
@@ -15,13 +13,7 @@ function Main() {
     const { id } = useAppSelector((state) => state.user.info);
     const { fullHistory } = useAppSelector((state) => state.user);
 
-    const { setShowBackButton, setShowLogoutButton } = useHeader();
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setShowBackButton(true);
-        setShowLogoutButton(true);
-    }, []);
 
     useEffect(() => {
         const fetchPlaylists = async () => {

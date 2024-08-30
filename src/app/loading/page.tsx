@@ -8,19 +8,12 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setUserInfo } from "@/lib/store/userSlice";
 import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 import { CircularProgress } from "@mui/material";
-import { useHeader } from "@/components/HeaderContext";
 
 function Main() {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { setShowBackButton, setShowLogoutButton } = useHeader();
 
     const { accessToken } = useAppSelector((state) => state.user.info);
-
-    useEffect(() => {
-        setShowBackButton(false);
-        setShowLogoutButton(true);
-    }, []);
 
     useEffect(() => {
         if (accessToken) {

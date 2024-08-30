@@ -1,0 +1,29 @@
+.carousel-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    animation: scroll 30s linear infinite;
+}
+
+.image {
+    height: 9rem; /* h-36 */
+    border-radius: 0.75rem; /* rounded-xl */
+    margin: 1rem; /* m-4 */
+    flex-shrink: 0;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(
+            -100%
+        ); /* Start with the images off-screen to the left */
+    }
+    to {
+        transform: translateX(
+            0
+        ); /* Move the track to the right, showing the images */
+    }
+}

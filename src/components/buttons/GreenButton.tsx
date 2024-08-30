@@ -1,3 +1,5 @@
+import styles from "./GreenButton.module.scss";
+
 interface GreenButtonProps {
     text: string;
     onClick: () => any;
@@ -6,7 +8,7 @@ interface GreenButtonProps {
 export default function GreenButton({ text, onClick }: GreenButtonProps) {
     return (
         <button
-            className="bg-green-700 rounded-md hover:bg-green-500 text-green-200 mx-1 my-3 px-4 py-1 text-sm"
+            className={styles["green-button"]}
             type="submit"
             onClick={onClick}
         >
