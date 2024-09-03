@@ -1,0 +1,8 @@
+{
+    "crons": [
+        {
+            "path": "/api/fetchAlbums",
+            "schedule": "0 5 * * *"
+        }
+    ]
+}

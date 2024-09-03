@@ -5,16 +5,16 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { loginUrl } from "@/utils/spotify";
-import { useHeader } from "@/components/HeaderContext";
+// import { useHeader } from "@/components/HeaderContext";
 
 export default function Home() {
     const router = useRouter();
-    const { setShowBackButton, setShowLogoutButton } = useHeader();
+    // const { setShowBackButton, setShowLogoutButton } = useHeader();
 
-    useEffect(() => {
-        setShowBackButton(false);
-        setShowLogoutButton(false);
-    }, []);
+    // useEffect(() => {
+    //     setShowBackButton(false);
+    //     setShowLogoutButton(false);
+    // }, []);
 
     useEffect(() => {
         const existingAccessToken = Cookies.get("access_token");

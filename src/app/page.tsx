@@ -40,13 +40,13 @@ export default function Home() {
 
     return (
         <div className="flex flex-col items-center text-white h-full">
-            <div className="h-2/4 flex items-center">
+            <div className="h-2/4 flex items-center m-2">
                 <img className="h-3/5" src={logo.src} alt="Logo" />
                 <div className="ml-12">
                     <h1 className="text-5xl font-bold">Spotify Sentences</h1>
                     <p className="my-4">
-                        A fun way to create playlists whose songs' titles match
-                        the words in your sentence!
+                        A fun way to create playlists whose songs&apos; titles
+                        match the words in your sentence!
                     </p>
                     <GreenButton text="Login with Spotify" onClick={login} />
                 </div>
