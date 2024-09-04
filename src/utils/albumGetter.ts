@@ -38,7 +38,11 @@ class AlbumGetter {
                     return largestImage.url;
                 });
 
-                return largestImageUrls;
+                const filtered = largestImageUrls.filter(
+                    (value: string, index: number, array: string[]) =>
+                        array.indexOf(value) === index
+                );
+                return filtered.slice(0, 20);
             } else {
                 console.error(
                     "Failed to retrieve albums",

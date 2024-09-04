@@ -40,6 +40,13 @@ export const getPlaylistHistory = async (userId: string) => {
     return data.result as SearchResult[];
 };
 
+export const fetchAlbums = async (): Promise<string[]> => {
+    const response = await fetchWithTimeout("/api/fetchAlbums");
+    const data = await response.json();
+
+    return data.albums;
+};
+
 const fetchWithTimeout = async (
     url: string,
     options: RequestInit = {},

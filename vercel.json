@@ -1,7 +1,7 @@
 {
     "crons": [
         {
-            "path": "/api/fetchAlbums",
+            "path": "/api/refreshAlbums",
             "schedule": "0 5 * * *"
         }
     ]
