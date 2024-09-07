@@ -5,3 +5,10 @@
     color: #ffffff;
     font-size: 1.25rem;
 }
+
+@media (max-width: 560px) {
+    .green-button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}

@@ -13,7 +13,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
                 {images.map((image, index) => (
                     <img
                         key={index}
-                        className={`${styles.image} image h-36 rounded-xl m-4`}
+                        className={`${styles.image} rounded-xl m-4`}
                         src={image}
                         alt={`image ${index}`}
                     />
@@ -22,7 +22,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
                 {images.map((image, index) => (
                     <img
                         key={index + images.length}
-                        className={`${styles.image} image h-36 rounded-xl m-4`}
+                        className={`${styles.image} rounded-xl m-4`}
                         src={image}
                         alt={`image ${index}`}
                     />

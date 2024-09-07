@@ -40,7 +40,7 @@ export default function Home() {
                 <img className={styles.logo} src={logo.src} alt="Logo" />
                 <div className={styles.titleBox}>
                     <h1 className={styles.title}>Spotify Sentences</h1>
-                    <p className="my-4">
+                    <p className={styles.subtitle}>
                         A fun way to create playlists whose songs&apos; titles
                         match the words in your sentence!
                     </p>
@@ -54,11 +54,11 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        <div className={styles["description"]}>
-                            <div className="text-xl font-bold mb-2">
+                        <div className={styles.description}>
+                            <div className={styles.howItWorks}>
                                 How does it work?
                             </div>
-                            <p>
+                            <p className={styles.explanation}>
                                 Login with Spotify to enter a sentence and a
                                 playlist title, then SpotifySentences will
                                 create a playlist on your account with songs
