@@ -36,10 +36,10 @@ export default function Home() {
 
     return (
         <div className="flex flex-col items-center text-white h-full">
-            <div className="h-2/4 flex items-center m-2">
-                <img className="h-3/5" src={logo.src} alt="Logo" />
-                <div className="ml-12">
-                    <h1 className="text-5xl font-bold">Spotify Sentences</h1>
+            <div className={styles.header}>
+                <img className={styles.logo} src={logo.src} alt="Logo" />
+                <div className={styles.titleBox}>
+                    <h1 className={styles.title}>Spotify Sentences</h1>
                     <p className="my-4">
                         A fun way to create playlists whose songs&apos; titles
                         match the words in your sentence!
