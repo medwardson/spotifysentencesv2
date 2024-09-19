@@ -41,11 +41,13 @@ function Main() {
         const fetchData = async () => {
             try {
                 const data = await fetchSpotifyUserData(accessToken);
+
                 dispatch(
                     setUserInfo({
                         id: data.id,
                         displayName: data.display_name,
                         accessToken: accessToken,
+                        profilePictureUrl: data.images?.at(-1)?.url,
                     })
                 );
                 // Optional: Call sendData if needed

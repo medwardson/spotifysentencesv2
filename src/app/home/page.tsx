@@ -1,42 +1,57 @@
 "use client";
 
-import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import styles from "@/app/home/page.module.scss";
+import logo from "../../../public/images/newLogo.svg";
+
 import { useRouter } from "next/navigation";
-import SearchHistory from "@/components/search/searchHistory/SearchHistory";
-import SearchForm from "@/components/search/SearchForm";
-import GreenButton from "@/components/buttons/GreenButton";
 import { useAppSelector } from "../../lib/hooks";
 import withAuth from "@/components/useAuth";
+import { TextInput } from "@/components/inputs/TextInput";
+import { useState } from "react";
 
 function Main() {
     const router = useRouter();
 
     const { recentResults } = useAppSelector((state) => state.user);
-    const { id } = useAppSelector((state) => state.user.info);
+    const { displayName, profilePictureUrl } = useAppSelector(
+        (state) => state.user.info
+    );
+
+    const [playlistTitle, setPlaylistTitle] = useState("");
 
     return (
-        <>
-            <main className="flex flex-col items-center p-4 text-gray-800 w-full h-full overflow-scroll">
-                <div>
-                    <GreenButton
-                        text="Search History"
-                        onClick={() => router.push("/history")}
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <img className={styles.logo} src={logo.src} alt="Logo" />
+                <div className={styles.headerRight}>
+                    <div className={styles.titleBox}>
+                        <h1>Spotify Sentences</h1>
+                        <div className={styles.userInfo}>
+                            <span>Hi, {displayName}!</span>
+                            <img
+                                className={styles.pfp}
+                                src={profilePictureUrl}
+                            />
+                        </div>
+                    </div>
+
+                    <TextInput
+                        placeholder="Playlist Title"
+                        value={playlistTitle}
+                        onChange={setPlaylistTitle}
+                        className="mt-2"
+                    />
+
+                    <TextInput
+                        placeholder="Sentence to convert..."
+                        value=""
+                        onChange={() => {}}
+                        className="mt-2"
                     />
                 </div>
-
-                {id ? (
-                    <>
-                        <SearchForm />
-                        <SearchHistory
-                            title="Recent Results"
-                            results={recentResults}
-                        />
-                    </>
-                ) : (
-                    <CircularProgress color="inherit" />
-                )}
-            </main>
-        </>
+            </div>
+            <div className={styles["bottom-container"]}></div>
+        </div>
     );
 }
 

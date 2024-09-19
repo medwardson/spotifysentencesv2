@@ -7,6 +7,7 @@ const initialState: User = {
         id: undefined,
         displayName: undefined,
         accessToken: undefined,
+        profilePictureUrl: undefined,
     },
     recentResults: [],
     fullHistory: [],
@@ -22,11 +23,13 @@ const userSlice = createSlice({
                 id: string;
                 displayName: string;
                 accessToken: string;
+                profilePictureUrl?: string;
             }>
         ) => {
             state.info.id = action.payload.id;
             state.info.accessToken = action.payload.accessToken;
             state.info.displayName = action.payload.displayName;
+            state.info.profilePictureUrl = action.payload.profilePictureUrl;
         },
         clearUserInfo: () => {
             return initialState;

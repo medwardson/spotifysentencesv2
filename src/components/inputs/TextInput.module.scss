@@ -1,0 +1,16 @@
+.input-container {
+    width: 100%;
+}
+
+.gradient-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 9999px; /* Full rounded */
+    background-color: rgba(33, 33, 33, 0.5); /* Semi-transparent gray */
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #b3b3b3;
+    font-size: 1rem;
+    font-weight: normal;
+}
