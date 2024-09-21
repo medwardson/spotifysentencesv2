@@ -28,7 +28,7 @@ export const Options: FC<OptionsProps> = ({
     onSearch,
 }) => {
     return (
-        <div className={className}>
+        <div className={combineClasses(className, styles.options)}>
             <IconButton onClick={onSearch} className={styles["icon-button"]}>
                 <Search className={styles.search} />
             </IconButton>
