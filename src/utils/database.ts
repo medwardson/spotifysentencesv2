@@ -22,7 +22,7 @@ export const sendData = async (id: string, username: string, time: Date) => {
         body: JSON.stringify({
             id: id,
             username: username,
-            time: time.toDateString(),
+            time: time.toISOString().slice(0, 10).replace(/-/g, ""),
         }),
     });
 };

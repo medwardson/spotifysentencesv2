@@ -1,0 +1,52 @@
+@import "../../../styles/variables.scss";
+
+.search {
+    color: black;
+    height: 4rem !important;
+    width: 4rem !important;
+}
+
+.icon-button {
+    background-color: $primary-green !important;
+
+    &:hover {
+        background-color: $primary-green !important;
+        opacity: 0.7;
+    }
+}
+
+.info {
+    background-color: rgba(33, 33, 33, 0.7);
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.question {
+    color: white !important;
+    height: 1rem !important;
+    width: 1rem !important;
+}
+
+.toggle-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-group > button {
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    color: white !important;
+    background-color: #212121 !important;
+    opacity: 0.5;
+    text-transform: none;
+}
+
+.toggle-group > button.selected {
+    background-color: $primary-green !important;
+    opacity: 1;
+}

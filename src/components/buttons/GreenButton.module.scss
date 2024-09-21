@@ -1,5 +1,7 @@
+@import "../../styles/variables.scss";
+
 .green-button {
-    background-color: #1db954;
+    background-color: $primary-green;
     padding: 0.5rem 1.5rem;
     border-radius: 1rem;
     color: #ffffff;

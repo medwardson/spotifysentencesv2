@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { loginUrl } from "@/utils/spotify";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { loginUrl } from "@/utils/spotify";
+import { useEffect, useState } from "react";
 import logo from "../../public/images/newLogo.svg";
 
 import styles from "@/app/page.module.scss";
