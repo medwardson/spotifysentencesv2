@@ -37,7 +37,9 @@ export const Options: FC<OptionsProps> = ({
                 value={mode}
                 exclusive
                 onChange={(_, newMode) => {
-                    setMode(newMode);
+                    if (newMode !== null) {
+                        setMode(newMode);
+                    }
                 }}
                 aria-label="mode selection"
                 className={combineClasses(styles["toggle-group"], "ml-8 mr-4")}

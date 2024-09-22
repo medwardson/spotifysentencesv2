@@ -1,15 +1,19 @@
-import React from "react";
+import React, { FC } from "react";
 
 import styles from "./ImageCarousel.module.scss";
 import Image from "next/image";
+import { combineClasses } from "@/utils/styles";
 
 interface ImageCarouselProps {
     images: string[];
+    className?: string;
 }
 
-const ImageCarousel = ({ images }: ImageCarouselProps) => {
+const ImageCarousel: FC<ImageCarouselProps> = ({ images, className }) => {
     return (
-        <div className={styles["carousel-container"]}>
+        <div
+            className={combineClasses(className, styles["carousel-container"])}
+        >
             <div className={`${styles["carousel-track"]} flex`}>
                 {images.map((image, index) => (
                     <Image

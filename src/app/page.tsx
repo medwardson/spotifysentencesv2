@@ -33,7 +33,7 @@ export default async function Home() {
                     </p>
                 </div>
 
-                <ImageCarousel images={albums} />
+                <ImageCarousel className="mb-8" images={albums} />
             </div>
         </div>
     );
