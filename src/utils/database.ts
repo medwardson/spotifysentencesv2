@@ -1,5 +1,7 @@
 import { SearchResult } from "@/types/spotify";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 export const addPlaylist = async (userId: string, sr: SearchResult) => {
     await fetch("/api/addPlaylist", {
         method: "POST",
@@ -48,23 +50,16 @@ export const fetchAlbums = async (): Promise<string[]> => {
 };
 
 const fetchWithTimeout = async (
-    url: string,
+    path: string,
     options: RequestInit = {},
     timeout: number = 7500
 ) => {
     const controller = new AbortController();
     options.signal = controller.signal;
 
-    // Ensure the URL has the base path prepended
-    const fullUrl = url.startsWith("http")
-        ? url
-        : `${
-              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-          }${url}`;
-
     try {
         const timeoutId = setTimeout(() => controller.abort(), timeout);
-        const response = await fetch(fullUrl, options);
+        const response = await fetch(`${baseUrl}${path}`, options);
         clearTimeout(timeoutId);
 
         if (!response.ok) {
