@@ -15,7 +15,7 @@ export const addPlaylist = async (userId: string, sr: SearchResult) => {
     });
 };
 
-export const sendData = async (id: string, username: string, time: Date) => {
+export const sendData = async (id: string, username: string) => {
     await fetchWithTimeout("/api/user", {
         method: "POST",
         headers: {
@@ -24,7 +24,7 @@ export const sendData = async (id: string, username: string, time: Date) => {
         body: JSON.stringify({
             id: id,
             username: username,
-            time: time.toISOString().slice(0, 10).replace(/-/g, ""),
+            time: new Date().toISOString().slice(0, 10).replace(/-/g, ""),
         }),
     });
 };

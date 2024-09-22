@@ -32,7 +32,7 @@ function Main() {
         } else {
             setLoading(false);
         }
-    }, []);
+    }, [dispatch, fullHistory?.length, id]);
 
     return (
         <>

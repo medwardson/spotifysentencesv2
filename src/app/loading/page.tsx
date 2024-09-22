@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { sendData } from "@/utils/database";
@@ -14,6 +14,32 @@ function Main() {
     const dispatch = useAppDispatch();
 
     const { accessToken } = useAppSelector((state) => state.user.info);
+
+    const getUserInfo = useCallback(
+        async (accessToken: string) => {
+            const fetchData = async () => {
+                try {
+                    const data = await fetchSpotifyUserData(accessToken);
+
+                    dispatch(
+                        setUserInfo({
+                            id: data.id,
+                            displayName: data.display_name,
+                            accessToken: accessToken,
+                            profilePictureUrl: data.images?.at(-1)?.url,
+                        })
+                    );
+                    // Optional: Call sendData if needed
+                    sendData(data.id, data.display_name);
+                    router.push("/home");
+                } catch (error) {
+                    router.push("/");
+                }
+            };
+            fetchData();
+        },
+        [dispatch, router]
+    );
 
     useEffect(() => {
         if (accessToken) {
@@ -35,30 +61,7 @@ function Main() {
             return;
         }
         router.push("/");
-    }, []);
-
-    const getUserInfo = async (accessToken: string) => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchSpotifyUserData(accessToken);
-
-                dispatch(
-                    setUserInfo({
-                        id: data.id,
-                        displayName: data.display_name,
-                        accessToken: accessToken,
-                        profilePictureUrl: data.images?.at(-1)?.url,
-                    })
-                );
-                // Optional: Call sendData if needed
-                sendData(data.id, data.display_name, new Date());
-                router.push("/home");
-            } catch (error) {
-                router.push("/");
-            }
-        };
-        fetchData();
-    };
+    }, [accessToken, getUserInfo, router]);
 
     return (
         <>
