@@ -17,8 +17,8 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images, className }) => {
             <div className={`${styles["carousel-track"]} flex`}>
                 {images.map((image, index) => (
                     <Image
-                        width={160}
-                        height={160}
+                        width={168}
+                        height={168}
                         key={index}
                         className={`${styles.image} rounded-xl m-4`}
                         src={image}
@@ -28,8 +28,8 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images, className }) => {
                 {/* Duplicate the images to create the infinite scroll effect */}
                 {images.map((image, index) => (
                     <Image
-                        width={160}
-                        height={160}
+                        width={168}
+                        height={168}
                         key={index + images.length}
                         className={`${styles.image} rounded-xl m-4`}
                         src={image}
