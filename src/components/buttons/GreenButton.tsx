@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./GreenButton.module.scss";
 
 interface GreenButtonProps {

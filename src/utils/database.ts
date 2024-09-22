@@ -55,9 +55,16 @@ const fetchWithTimeout = async (
     const controller = new AbortController();
     options.signal = controller.signal;
 
+    // Ensure the URL has the base path prepended
+    const fullUrl = url.startsWith("http")
+        ? url
+        : `${
+              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+          }${url}`;
+
     try {
         const timeoutId = setTimeout(() => controller.abort(), timeout);
-        const response = await fetch(url, options);
+        const response = await fetch(fullUrl, options);
         clearTimeout(timeoutId);
 
         if (!response.ok) {
