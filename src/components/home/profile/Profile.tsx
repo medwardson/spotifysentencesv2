@@ -8,6 +8,7 @@ import { Menu, MenuItem } from "@mui/material";
 import { clearUserInfo } from "@/lib/store/userSlice";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const Profile = () => {
     const dispatch = useAppDispatch();
@@ -35,7 +36,13 @@ export const Profile = () => {
         <div className={styles.userInfo}>
             <span>Hi, {displayName}!</span>
             <a onClick={handleClick}>
-                <img className={styles.pfp} src={profilePictureUrl} />
+                <Image
+                    height={40}
+                    width={40}
+                    className={styles.pfp}
+                    src={profilePictureUrl!} // TODO: Default to a placeholder image if profilePictureUrl is null
+                    alt="Profile Picture"
+                />
             </a>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <MenuItem dense onClick={handleClose}>
