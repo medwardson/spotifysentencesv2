@@ -1,0 +1,17 @@
+.pfp {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    margin-left: 1rem;
+    border: 5px solid rgba(0, 0, 0, 0.3); /* Adds a translucent border */
+}
+
+.pfp:hover {
+    cursor: pointer;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}

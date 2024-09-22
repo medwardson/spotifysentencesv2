@@ -1,3 +1,5 @@
+import styles from "./Profile.module.scss";
+
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -10,25 +12,18 @@ import { useRouter } from "next/navigation";
 export const Profile = () => {
     const dispatch = useAppDispatch();
     const router = useRouter();
-    const { displayName } = useAppSelector((state) => state.user.info);
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
 
-    const getInitials = (name: string): string | null => {
-        const initials = name.match(/\b\w/g) || [];
-        const result =
-            (initials.shift() || "") + (initials.pop() || "").toUpperCase();
+    const { displayName, profilePictureUrl } = useAppSelector(
+        (state) => state.user.info
+    );
 
-        if (result.length > 1) return result;
-        return null;
-    };
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLElement>) =>
         setAnchorEl(event.currentTarget);
-    };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const handleClose = () => setAnchorEl(null);
 
     const deleteCookie = () => {
         Cookies.remove("access_token");
@@ -36,19 +31,12 @@ export const Profile = () => {
         router.push("/");
     };
 
-    const open = Boolean(anchorEl);
-    const initials = getInitials(displayName ?? "");
-
     return (
-        <>
-            {" "}
-            <button className="border rounded-full flex" onClick={handleClick}>
-                {initials ? (
-                    <p className="p-1">{initials}</p>
-                ) : (
-                    <AccountCircleIcon />
-                )}
-            </button>
+        <div className={styles.userInfo}>
+            <span>Hi, {displayName}!</span>
+            <a onClick={handleClick}>
+                <img className={styles.pfp} src={profilePictureUrl} />
+            </a>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <MenuItem dense onClick={handleClose}>
                     {" "}
@@ -61,6 +49,6 @@ export const Profile = () => {
                     </button>
                 </MenuItem>
             </Menu>
-        </>
+        </div>
     );
 };
