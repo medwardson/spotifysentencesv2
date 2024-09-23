@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
+import queryReducer from "./store/querySlice";
 import userReducer from "./store/userSlice";
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             user: userReducer,
+            query: queryReducer,
         },
     });
 };

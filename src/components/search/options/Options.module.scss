@@ -2,16 +2,22 @@
 
 .search {
     color: black;
-    height: 4rem !important;
-    width: 4rem !important;
+    height: 3rem !important;
+    width: 3rem !important;
 }
 
 .icon-button {
     background-color: $primary-green !important;
+    padding: 1rem !important;
 
     &:hover {
         background-color: $primary-green !important;
         opacity: 0.7;
+    }
+
+    &:disabled {
+        background-color: $primary-green !important;
+        opacity: 0.5;
     }
 }
 

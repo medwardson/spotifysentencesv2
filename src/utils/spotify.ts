@@ -1,3 +1,4 @@
+import { Mode } from "@/components/search/options/Options";
 import { SearchResult, TrackObject } from "@/types/spotify";
 import { addPlaylist } from "@/utils/database";
 
@@ -29,12 +30,12 @@ class SpotifyClient {
     async startCreationAttempt(
         sentence: string,
         title: string,
-        longerTitles: boolean
+        mode: Mode
     ): Promise<SearchResult> {
         const words = this.splitSentence(sentence);
 
         const songUris = await (async () => {
-            if (longerTitles) {
+            if (mode == Mode.LONG) {
                 return this.getSongsLong(words, [], new Map());
             } else {
                 return this.getSongsShort(words, new Map());

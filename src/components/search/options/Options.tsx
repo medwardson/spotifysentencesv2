@@ -1,4 +1,9 @@
 import styles from "@/components/search/options/Options.module.scss";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { clearQuery, setFetching, setMode } from "@/lib/store/querySlice";
+import { addRecentResult } from "@/lib/store/userSlice";
+import { SearchResult } from "@/types/spotify";
+import SpotifyClient from "@/utils/spotify";
 import { combineClasses } from "@/utils/styles";
 import { QuestionMark, Search } from "@mui/icons-material";
 import {
@@ -15,21 +20,42 @@ export enum Mode {
 }
 
 interface OptionsProps {
-    mode: Mode;
-    setMode: (mode: Mode) => void;
     className?: string;
-    onSearch?: () => void;
 }
 
-export const Options: FC<OptionsProps> = ({
-    mode,
-    setMode,
-    className,
-    onSearch,
-}) => {
+export const Options: FC<OptionsProps> = ({ className }) => {
+    const dispatch = useAppDispatch();
+    const { sentence, title, mode, isFetching } = useAppSelector(
+        (state) => state.query
+    );
+    const { id, accessToken } = useAppSelector((state) => state.user.info);
+
+    // TODO: maybe we can use DI
+    if (!accessToken || !id) return;
+
+    const client = new SpotifyClient(accessToken, id);
+    const disabled = sentence.length === 0 || title.length === 0 || isFetching;
+
+    const submit = async () => {
+        dispatch(setFetching(true));
+        client
+            .startCreationAttempt(sentence, title, mode)
+            .then((sr: SearchResult) => {
+                dispatch(addRecentResult({ sr }));
+                dispatch(clearQuery());
+            })
+            .catch((err: any) => {
+                console.error(err);
+            });
+    };
+
     return (
         <div className={combineClasses(className, styles.options)}>
-            <IconButton onClick={onSearch} className={styles["icon-button"]}>
+            <IconButton
+                disabled={disabled}
+                onClick={submit}
+                className={styles["icon-button"]}
+            >
                 <Search className={styles.search} />
             </IconButton>
 
@@ -38,7 +64,7 @@ export const Options: FC<OptionsProps> = ({
                 exclusive
                 onChange={(_, newMode) => {
                     if (newMode !== null) {
-                        setMode(newMode);
+                        dispatch(setMode(newMode));
                     }
                 }}
                 aria-label="mode selection"

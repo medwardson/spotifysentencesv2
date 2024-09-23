@@ -11,6 +11,7 @@ import { useState } from "react";
 import { InfoSharp } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addRecentResult } from "@/lib/store/userSlice";
+import { Mode } from "./options/Options";
 
 export default function SearchForm() {
     const dispatch = useAppDispatch();
@@ -33,7 +34,7 @@ export default function SearchForm() {
                 e.preventDefault();
                 setLoading(true);
                 client
-                    .startCreationAttempt(sentence, title, longerTitles)
+                    .startCreationAttempt(sentence, title, Mode.SHORT)
                     .then((sr: SearchResult) => {
                         dispatch(addRecentResult({ sr }));
                         setLoading(false);

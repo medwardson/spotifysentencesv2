@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { Profile } from "@/components/home/profile/Profile";
+import { TextInput } from "@/components/inputs/TextInput";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { setSentence, setTitle } from "@/lib/store/querySlice";
+import Image from "next/image";
 import logo from "../../../../public/images/newLogo.svg";
 import styles from "./Header.module.scss";
-import { TextInput } from "@/components/inputs/TextInput";
-import { Profile } from "@/components/home/profile/Profile";
-import Image from "next/image";
 
 export const Header = () => {
-    const [playlistTitle, setPlaylistTitle] = useState<string>("");
-    const [sentence, setSentence] = useState<string>("");
+    const dispatch = useAppDispatch();
+
+    const { title, sentence } = useAppSelector((state) => state.query);
 
     return (
         <div className={styles.header}>
@@ -26,15 +28,15 @@ export const Header = () => {
 
                 <TextInput
                     placeholder="Playlist Title"
-                    value={playlistTitle}
-                    onChange={setPlaylistTitle}
+                    value={title}
+                    onChange={(value) => dispatch(setTitle(value))}
                     className="mt-2"
                 />
 
                 <TextInput
                     placeholder="Sentence to convert..."
                     value={sentence}
-                    onChange={setSentence}
+                    onChange={(value) => dispatch(setSentence(value))}
                     className="mt-2"
                 />
             </div>
