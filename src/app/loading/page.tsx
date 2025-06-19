@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { sendData } from "@/utils/database";
@@ -9,10 +9,12 @@ import { setUserInfo } from "@/lib/store/userSlice";
 import { fetchSpotifyUserData } from "@/utils/getUserInfo";
 import { CircularProgress } from "@mui/material";
 import { useHeader } from "@/components/HeaderContext";
+import { getAccessToken } from "@/utils/spotifyAuth";
 
 function Main() {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const ran = useRef(false);
     const { setShowBackButton, setShowLogoutButton } = useHeader();
 
     const { accessToken } = useAppSelector((state) => state.user.info);
@@ -20,28 +22,40 @@ function Main() {
     useEffect(() => {
         setShowBackButton(false);
         setShowLogoutButton(true);
-    }, []);
+    }, [setShowBackButton, setShowLogoutButton]);
 
     useEffect(() => {
+        // Prevent double running this as the code is only valid once
+        if (ran.current) return;
+        ran.current = true;
+
         if (accessToken) {
             router.push("/home");
             return;
         }
-        const hash = new URLSearchParams(window.location.hash);
-        const newToken = hash.get("#access_token");
-        if (newToken) {
-            Cookies.set("access_token", newToken, {
-                expires: 1 / 24,
-            });
-            getUserInfo(newToken);
+
+        const cookieToken = Cookies.get("access_token");
+
+        if (cookieToken) {
+            getUserInfo(cookieToken);
             return;
         }
-        const existingAccessToken = Cookies.get("access_token");
-        if (existingAccessToken) {
-            getUserInfo(existingAccessToken);
-            return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get("code");
+
+        if (code) {
+            getAccessToken(code)
+                .then((token) => {
+                    if (token) getUserInfo(token);
+                    else router.push("/");
+                })
+                .catch(() => router.push("/"));
+        } else {
+            router.push("/");
         }
-        router.push("/");
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUserInfo = async (accessToken: string) => {

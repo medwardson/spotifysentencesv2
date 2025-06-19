@@ -1,10 +1,9 @@
 "use client";
 
-import { useAppDispatch } from "../lib/hooks";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { loginUrl } from "@/utils/spotify";
+import { login } from "@/utils/spotifyAuth";
 import { useHeader } from "@/components/HeaderContext";
 
 export default function Home() {
@@ -21,10 +20,6 @@ export default function Home() {
 
         if (existingAccessToken) router.push("/loading");
     }, []);
-
-    function login() {
-        window.location.assign(loginUrl);
-    }
 
     return (
         <main>

@@ -1,17 +1,6 @@
 import { SearchResult, TrackObject } from "@/types/spotify";
 import { addPlaylist } from "@/utils/database";
 
-export const loginUrl =
-    "https://accounts.spotify.com/authorize" +
-    "?response_type=token" +
-    "&client_id=" +
-    process.env.NEXT_PUBLIC_CLIENT_ID +
-    "&scope=playlist-modify-public" +
-    "&redirect_uri=" +
-    process.env.NEXT_PUBLIC_BASE_URL +
-    "/loading" +
-    "&show_dialog=true";
-
 class SpotifyClient {
     private headers: HeadersInit;
 
@@ -187,6 +176,7 @@ class SpotifyClient {
                 headers: this.headers,
                 body: JSON.stringify({
                     name: title,
+                    description: "Add a description for your playlist.",
                 }),
             }
         )
